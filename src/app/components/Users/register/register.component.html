@@ -1,0 +1,336 @@
+<div class="x_panel">
+  <div class="x_title">
+    <h2>Add Users</h2>
+    <ul class="nav navbar-right panel_toolbox">
+      <li>
+        <a (click)="reset()" class="btn btn-outline"
+          ><i class="fa fa-refresh"></i> Reset</a
+        >
+      </li>
+      <li>
+        <a (click)="samplePatchValues()" class="btn btn-outline">
+          <i class="fa fa-edit"></i> Sample Values
+        </a>
+      </li>
+      <li>
+        <a href="/Users" class="btn btn-outline">
+          <i class="fa fa-file"></i> Back To List
+        </a>
+      </li>
+    </ul>
+    <div class="clearfix"></div>
+  </div>
+  <div class="x_content_inner">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="row">
+        <div class="col-3">
+          <div class="form-group">
+            <label for="Name" class="control-label">Name</label>
+            <input
+              class="form-control"
+              tabindex="1"
+              id="uname"
+              formControlName="uname"
+              value="Danish"
+            />
+            <input
+              class="form-control"
+              tabindex="1"
+              id="userId"
+              formControlName="userId"
+              type="hidden"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="DateofBirth" class="control-label">Date of Birth</label>
+            <div class="input-group">
+              <input
+                type="text"
+                placeholder="dd/MM/yyyy"
+                class="form-control"
+                tabindex="5"
+                ngbDatepicker
+                #d="ngbDatepicker"
+                navigation="select"
+                outsideDays="collapsed"
+                [minDate]="{ year: 1900, month: 1, day: 1 }"
+                [maxDate]="todaymax2"
+                readonly
+                (dateselect)="onDateSelect($event)"
+                [class.ng-invalid]="dateofBirth.errors"
+                value="{{ [startDate] }}"
+              />
+              <input
+                type="hidden"
+                formControlName="dateofBirth"
+                id="dateofBirth"
+              />
+              <button
+                class="btn btn-outline-secondary fa fa-calendar"
+                (click)="d.toggle()"
+                type="button"
+                tabindex="4"
+              ></button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Province</label>
+            <select
+              id="provinceId"
+              name="provinceId"
+              formControlName="provinceId"
+              class="form-select"
+              (change)="onProvinceSelected($event)"
+              [selectedIndex]="1"
+              tabindex="8"
+              [class.ng-invalid]="provinceId?.invalid"
+            >
+              <option *ngFor="let item of provincesList" value="{{ item.Id }}">
+                {{ item.Name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Role</label>
+            <select
+              id="roleId"
+              name="roleId"
+              formControlName="roleId"
+              class="form-select"
+              tabindex="13"
+              [selectedIndex]="1"
+              [class.ng-invalid]="roleId?.invalid"
+            >
+              <option *ngFor="let item of rolesList" value="{{ item.Id }}">
+                {{ item.Name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="form-group">
+            <label for="username" class="control-label">Username</label>
+            <input
+              class="form-control"
+              tabindex="2"
+              id="username"
+              formControlName="username"
+              value="talpurdanish"
+            />
+          </div>
+          <div class="form-group">
+            <label for="cnic" class="control-label">CNIC</label>
+            <input
+              type="text"
+              id="cnic"
+              class="form-control"
+              tabindex="6"
+              placeholder="_____-_______-_"
+              formControlName="cnic"
+              [imask]="cnicMask"
+              [unmask]="true"
+            />
+          </div>
+          <div class="form-group">
+            <label for="City" class="control-label">City</label>
+
+            <select
+              class="form-select"
+              id="cityId"
+              name="cityId"
+              formControlName="cityId"
+              [selectedIndex]="1"
+              [class.ng-invalid]="cityId?.invalid"
+            >
+              <option *ngFor="let item of citiesList" value="{{ item.Id }}">
+                {{ item.Name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="PMDCNo" class="control-label">PMDC No</label>
+            <input
+              class="form-control"
+              value="1234-98"
+              tabindex="14"
+              id="pmdcNo"
+              formControlName="pmdcNo"
+              required
+            />
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group">
+            <label for="Address" class="control-label">Address</label>
+            <input
+              class="form-control"
+              value="house"
+              tabindex="3"
+              id="address"
+              formControlName="address"
+            />
+          </div>
+          <div class="form-group">
+            <label class="control-label">Picture</label>
+            <input
+              class="form-control"
+              tabindex="7"
+              id="profilepic"
+              type="file"
+              formControlName="picture"
+              (change)="onFileSelected($event)"
+              #fileUpload
+            />
+          </div>
+          <div class="row">
+            <div class="col-9">
+              <div class="form-group">
+                <label for="Gender" class="control-label">Gender</label>
+                <div
+                  class="radio-buttons-container"
+                  [class.ng-invalid]="gender?.invalid"
+                >
+                  <input
+                    type="radio"
+                    id="gender"
+                    tabindex="10"
+                    value="0"
+                    checked
+                    formControlName="gender"
+                  />
+                  Male
+                  <input
+                    type="radio"
+                    id="gender"
+                    tabindex="11"
+                    value="1"
+                    formControlName="gender"
+                  />
+                  Female
+                  <input
+                    type="radio"
+                    id="gender"
+                    tabindex="12"
+                    value="2"
+                    formControlName="gender"
+                  />
+                  Other
+                </div>
+              </div>
+            </div>
+            <div class="col-3" *ngIf="this.isEdit">
+              <div class="form-group">
+                <label for="isActive" class="control-label">Status</label>
+                <div class="radio-buttons-container" *ngIf="this.isEdit">
+                  <input type="checkbox" formControlName="isActive" />
+                  Active
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="PhoneNo" class="control-label">Phone No</label>
+            <div class="phoneno-container">
+              <select
+                id="phoneType"
+                class="form-select"
+                formControlName="phoneType"
+                (change)="onPhoneTypeSelected($event)"
+                tabindex="15"
+              >
+                <option value="0" selected>Mobile</option>
+                <option value="1">Landline</option>
+              </select>
+              <input
+                type="text"
+                id="phoneNo"
+                class="form-control"
+                tabindex="16"
+                placeholder="{{ phonePlaceHolder }}"
+                formControlName="phoneNo"
+                [imask]="phoneNoMask"
+                [unmask]="true"
+                (accept)="onAccept()"
+                (complete)="onComplete()"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="col-2">
+          <label class="control-label">Picture Preview</label>
+          <div class="col-sm-10">
+            <img id="picture" [src]="imageSrc" width="150px" height="154px" />
+          </div>
+        </div>
+      </div>
+      <div
+        id="errorContainer"
+        class="alert alert-warning text-danger row"
+        role="alert"
+        *ngIf="!userForm.valid"
+      >
+        <div class="col">
+          <ul>
+            <li *ngIf="uname.errors?.['required']">Name is required</li>
+            <li
+              *ngIf="
+                uname.errors?.['minlength'] ||
+                uname.errors?.['maxlength']
+              "
+            >
+              Name should be 3 to 20 chars long
+            </li>
+
+            <li *ngIf="username.errors?.['required']">Username is required</li>
+            <li
+              *ngIf="
+                username.errors?.['minlength'] ||
+                username.errors?.['maxlength']
+              "
+            >
+              Username should be 3 to 20 chars long
+            </li>
+            <li *ngIf="username.errors?.['usernameExists']">
+              Duplicate Username
+            </li>
+
+            <li *ngIf="dateofBirth.errors?.['required']">
+              Date of Birth is required
+            </li>
+            <li *ngIf="cnic.errors?.['required']">CNIC is required</li>
+            <li *ngIf="cnic.errors?.['minlength']">
+              CNIC should be 13 chars long (without dashes)
+            </li>
+            <li *ngIf="cnic.errors?.['cnicExists']">Duplicate CNIC</li>
+
+            <li *ngIf="provinceId.errors?.['required']">
+              Province is required
+            </li>
+          </ul>
+        </div>
+        <div class="col">
+          <ul>
+            <li *ngIf="roleId.errors?.['required']">Role is required</li>
+            <li *ngIf="cityId.errors?.['required']">City is required</li>
+            <li *ngIf="gender.errors?.['required']">Gender is required</li>
+            <li *ngIf="pmdcNo.errors?.['required']">PMDC No is required</li>
+            <li *ngIf="pmdcNo.errors?.['pmdcnoExists']">Duplicate PMDC No</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <input type="submit" value="Create" class="btn green" />
+        </div>
+        <div class="alert alert-danger" *ngIf="isSignUpFailed">
+          {{ errorMessage }}
+        </div>
+        <div class="alert alert-success" *ngIf="isSuccessful">
+          {{ errorMessage }}
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

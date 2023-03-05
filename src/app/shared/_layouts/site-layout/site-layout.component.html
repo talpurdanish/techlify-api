@@ -1,0 +1,103 @@
+<div class="container body fixed-footer">
+  <div class="main_container flexbox">
+    <div class="col-md-3 left_col">
+      <div class="scroll-view">
+        <app-profile></app-profile>
+        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+          <div class="menu_section">
+            <app-menu></app-menu>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right_col" role="main">
+      <!-- top navigation -->
+      <div class="top_nav">
+        <div class="nav_menu">
+          <div class="nav toggle">
+            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+          </div>
+          <nav class="nav navbar-nav">
+            <ul class="navbar-right patient-stats pull-right">
+              <li class="nav-item">
+                <div class="count-detail-title green-text">
+                  <i class="fa fa-techometer"></i> Patients Stats
+                </div>
+              </li>
+              <li class="nav-item" id="malepatients">
+                <div class="count-detail">Males</div>
+                <div class="count red-text">0</div>
+              </li>
+              <li class="nav-item" id="femalepatients">
+                <div class="count-detail">Females</div>
+                <div class="count red-text">0</div>
+              </li>
+
+              <li class="nav-item" id="otherpatients">
+                <div class="count-detail">Others</div>
+                <div class="count red-text">0</div>
+              </li>
+              <li class="nav-item">
+                <button
+                  class="count-detail-button"
+                  onclick="PopulatePatientsStats()"
+                >
+                  <i class="fa fa-refresh"></i>
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <!-- /top navigation -->
+      <div class="main_content">
+        <router-outlet></router-outlet>
+      </div>
+      <footer>
+        <div class="row">
+          <div class="pull-left col">
+            <ul class="footer-nav">
+              <li>
+                <a href="/Home/About">About Us</a>
+              </li>
+              <li>
+                <a href="/Home/Contact">Contact Us</a>
+              </li>
+              <li>
+                <a href="/Home/Privacy">Privacy</a>
+              </li>
+            </ul>
+          </div>
+          <div class="pull-right col">Federal Medical & Diagnostic Center</div>
+          <div class="clearfix"></div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="modal fade" tabindex="-1" role="dialog" id="form-modal">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <i class="fa fa-tasks"></i>
+          <h5 class="modal-title"></h5>
+          <button
+            type="button"
+            data-dismiss="modal"
+            aria-label="Close"
+            class="close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body"></div>
+      </div>
+    </div>
+  </div> -->
+<!-- <div class="loaderbody" id="loaderbody">
+        <div class="loader"><img src="assets/Images/scanning.gif" /></div>
+      </div> -->
+
+<!-- /footer content -->

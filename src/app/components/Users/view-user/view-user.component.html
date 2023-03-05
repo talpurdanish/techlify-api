@@ -1,0 +1,184 @@
+<div class="x_panel">
+  <div class="x_title">
+    <h2>Users List</h2>
+    <ul class="nav navbar-right panel_toolbox">
+      <li>
+        <a (click)="reload()" class="btn btn-outline"
+          ><i class="fa fa-refresh"></i> Reload</a
+        >
+      </li>
+      <li>
+        <a (click)="open('gr', 'Reciept', 41, '')" class="btn btn-outline"
+          ><i class="fa fa-file"></i> Generate Reciept</a
+        >
+      </li>
+    </ul>
+    <div class="clearfix"></div>
+  </div>
+  <div class="x_content_inner">
+    <div class="row">
+      <div class="col">
+        <table
+          class="table table-bordered table-striped table-hover"
+          datatable
+          [dtOptions]="dtOptions"
+          [dtTrigger]="dtTrigger"
+          id="userDatatable"
+        >
+          <thead>
+            <tr>
+              <th>Active</th>
+              <th>Id</th>
+              <th><i class="fa fa-photo"></i></th>
+              <th>Name</th>
+              <th>PMDCNo</th>
+              <th>CNIC</th>
+              <th>Role</th>
+              <th>Username</th>
+
+              <th>Gender</th>
+              <th>City</th>
+              <th>Actions</th>
+              <th>Manage</th>
+              <th>PhoneNo</th>
+              <th>DoB</th>
+              <th>Province</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of USERS" [class.deleted]="!item.IsActive">
+              <td>
+                <i
+                  [ngClass]="
+                    item.IsActive
+                      ? 'fa-solid fa-user-check'
+                      : 'fa-solid fa-user-slash'
+                  "
+                ></i>
+              </td>
+              <td>
+                {{ item.UserId }}
+              </td>
+              <td>
+                <a
+                  href="#"
+                  (click)="
+                    openModal(
+                      $event,
+                      'Profile Picture',
+                      item.Picturesrc,
+                      'image',
+                      item.hasImage
+                    )
+                  "
+                  ><img src="{{ item.Picturesrc }}" class="table-img" />
+                </a>
+              </td>
+              <td>
+                {{ item.Name }}
+              </td>
+
+              <td>
+                {{ item.PMDCNo }}
+              </td>
+              <td>
+                {{ item.CNIC }}
+              </td>
+              <td>
+                {{ item.RoleName }}
+              </td>
+              <td>
+                {{ item.Username }}
+              </td>
+              <td>
+                <span *ngIf="item.Gender == '0'">Male</span>
+                <span *ngIf="item.Gender == '1'">Female</span>
+                <span *ngIf="item.Gender == '2'">Other</span>
+              </td>
+              <td>
+                {{ item.CityName }}
+              </td>
+              <td class="action-column">
+                <div class="btn-group user-icons" role="group">
+                  <a [routerLink]="['/register', item.UserId]" class="btn green"
+                    ><img
+                      src="../../../../assets/images/edit.png"
+                      class="png-icons"
+                  /></a>
+                  <button
+                    [disabled]="!item.IsActive"
+                    type="button"
+                    value="Delete"
+                    class="btn red"
+                    (click)="Delete(item.UserId)"
+                  >
+                    <img
+                      src="../../../../assets/images/delete.png"
+                      class="png-icons"
+                    />
+                  </button>
+                </div>
+              </td>
+              <td>
+                <div class="btn-group user-icons" role="group">
+                  <button
+                    [disabled]="!item.IsActive"
+                    class="btn green"
+                    data-id="{{ item.UserId }}"
+                    (click)="ManageUser('addrole', item.UserId, item.Name)"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    title="Change Role"
+                  >
+                    <img
+                      src="../../../../assets/images/adduser.png"
+                      class="png-icons"
+                    />
+                  </button>
+                  <button
+                    class="btn blue"
+                    (click)="ManageUser('actdeactuser', item.UserId)"
+                    data-id="{{ item.UserId }}"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                  >
+                    <img
+                      [src]="
+                        item.IsActive
+                          ? '../../../../assets/images/activate.png'
+                          : '../../../../assets/images/deactivate.png'
+                      "
+                      class="png-icons"
+                    />
+                  </button>
+
+                  <button
+                    [disabled]="!item.IsActive"
+                    class="btn gray"
+                    (click)="ManageUser('resetpwd', item.UserId)"
+                    data-id="{{ item.UserId }}"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    title="Reset Password"
+                  >
+                    <img
+                      src="../../../../assets/images/reset-pwd.png"
+                      class="png-icons"
+                    />
+                  </button>
+                </div>
+              </td>
+              <td>
+                {{ item.PhoneNo }}
+              </td>
+              <td>{{ item.DateofBirth }}</td>
+              <td>
+                {{ item.ProvinceName }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,4 @@
+.dataTable tr.deleted td{
+
+  background:rgb(255, 184, 184)!important;
+}

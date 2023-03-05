@@ -1,0 +1,32 @@
+<div class="modal-header">
+  <i class="fa fa-user-check"></i>
+  <h5 class="modal-title">{{ title }}!</h5>
+
+  <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="activeModal.close(isSuccessful)"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="row" *ngIf="show">
+    <div class="col"></div>
+    <div class="col">
+      <iframe
+        id="report"
+        height="600"
+        width="800"
+        [src]="url | safeUrl"
+      ></iframe>
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <div class="row" style="width: 100%"></div>
+</div>

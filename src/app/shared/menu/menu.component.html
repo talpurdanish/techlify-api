@@ -1,0 +1,36 @@
+<accordion [collapsing]="true" *ngIf="menuItems.length > 0">
+  <accordion-item *ngFor="let item of menuItems" haschild="{{ item.haschild }}">
+    <ng-template accordionTitle>
+      <div class="flex space-x-2">
+        <i class="fa {{ item.class }}"></i> {{ item.title }}
+      </div>
+    </ng-template>
+    <ng-template accordionContent *ngIf="item.SubMenus.length > 0">
+      <div>
+        <ul class="accordion-child-menu">
+          <li *ngFor="let submenu of item.SubMenus">
+            <a href="{{ submenu.link }}">{{ submenu.title }}</a>
+          </li>
+        </ul>
+      </div>
+    </ng-template>
+  </accordion-item>
+</accordion>
+
+<!-- <h3>General</h3>
+<ul class="nav side-menu" *ngIf="menuItems.length > 0">
+  <li *ngFor="let item of menuItems">
+    <a *ngIf="item.SubMenus.length > 0">
+      <i class="fa {{ item.class }}"></i> {{ item.title }}
+      <span class="fa fa-chevron-down"></span>
+      <ul class="nav child_menu">
+        <li *ngFor="let submenu; in: item.SubMenus">
+          <a href="{{ submenu.link }}">{{ submenu.title }}</a>
+        </li>
+      </ul>
+    </a>
+    <a *ngIf="item.SubMenus.length == 0" href="{{ item.link }}">
+      <i class="fa {{ item.class }}"></i> {{ item.title }}
+    </a>
+  </li>
+</ul> -->

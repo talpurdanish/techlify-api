@@ -1,0 +1,74 @@
+<div class="profile" *ngIf="currentUser; else loggedOut">
+  <div class="row">
+    <div class="col">
+      <div class="profile_pic">
+        <img
+          *ngIf="currentUser.Picture"
+          src="../../../assets/uploads/{{ currentUser.Picture }}"
+          alt="..."
+          class="img-circle profile_img"
+        />
+
+        <img
+          *ngIf="!currentUser.Picture"
+          src="../../../assets/images/profile.png"
+          alt="..."
+          class="img-circle profile_img"
+        />
+      </div>
+      <div class="profile_info">
+        <span>Welcome,</span>
+        <h2>{{ currentUser.FirstName }}</h2>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col">
+      <div class="profile-menu dropdown">
+        <a
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          title="Settings"
+          data-original-title="Settings"
+          href="#"
+        >
+          <span class="gi gi-cog" aria-hidden="true"></span>
+        </a>
+        <a
+          (click)="ToggleFullScreen()"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          title="Toggle Fullscreen"
+          data-original-title="Toggle Fullscreen"
+        >
+          <span class="gi gi-fullscreen" aria-hidden="true"></span>
+        </a>
+
+        <a
+          id="BtnChangePassword"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          title="Change Password"
+          data-original-title="Change Password"
+          (click)="open()"
+        >
+          <span class="gi gi-asterisk" aria-hidden="true"></span>
+        </a>
+        <a
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          title="Logout"
+          href="/logout"
+          data-original-title="Logout"
+        >
+          <span class="gi gi-off" aria-hidden="true"></span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="clearfix"></div>
+</div>
+
+<ng-template #loggedOut> Please login. </ng-template>
