@@ -1,0 +1,28 @@
+<!-- <div class="row" *ngIf="show">
+  <div class="col"></div>
+  <div class="col">
+    <iframe id="report" height="600" width="800" [src]="url | safeUrl"></iframe>
+  </div>
+  <div class="col"></div>
+</div> -->
+
+<!--
+<div class="row" *ngIf="show">
+  <div class="col"></div>
+  <div class="col pbutton-print">
+    <button pButton pRipple label="Print" icon="pi pi-print" class="mr-2" (click)="print()"
+      [disabled]="!isPdfLoaded"></button>
+
+    <pdf-viewer [src]="url" [render-text]="true" [original-size]="false" class="pdf-viewer"
+      (after-load-complete)="onLoaded($event)"></pdf-viewer>
+  </div>
+  <div class="col"></div>
+</div> -->
+
+<ngx-extended-pdf-viewer [src]="url" class="pdf-viewer" [contextMenuAllowed]="false" [height]="'90vh'"
+  [useBrowserLocale]="true" [showToolbar]="true" [showSidebarButton]="false" [showFindButton]="false"
+  [showPagingButtons]="false" [showDrawEditor]="false" [showTextEditor]="false" [showZoomButtons]="true"
+  [showPresentationModeButton]="false" [showOpenFileButton]="false" [showPrintButton]="true"
+  [showDownloadButton]="false" [showSecondaryToolbarButton]="false" [showRotateButton]="false"
+  [showHandToolButton]="false" [showScrollingButton]="false" [showSpreadButton]="false"
+  [showPropertiesButton]="false"></ngx-extended-pdf-viewer>

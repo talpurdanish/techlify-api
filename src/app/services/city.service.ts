@@ -1,7 +1,8 @@
+import { CommonFunctions } from './../helper/common.function';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-const AUTH_API = 'http://localhost:4000/api/fmdc/cities/';
+const CONTROLLER_NAME = '/cities';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
@@ -11,6 +12,9 @@ const httpOptions = {
 export class CityService {
   constructor(private http: HttpClient) {}
   getCities(provinceid: number): Observable<any> {
-    return this.http.get(AUTH_API + provinceid, httpOptions);
+    return this.http.get(
+      CommonFunctions.API_URL + CONTROLLER_NAME + `/${provinceid}`,
+      httpOptions
+    );
   }
 }

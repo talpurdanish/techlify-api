@@ -1,4 +1,5 @@
 import { NavigationEnd, Router } from '@angular/router';
+import { PrimeNGConfig } from 'primeng/api';
 import { MenuService } from './services/menu.service';
 import { Component } from '@angular/core';
 import { StorageService } from 'src/app/services/storage.service';
@@ -14,15 +15,20 @@ export class AppComponent {
 
   constructor(
     private storageService: StorageService,
-    private menuService: MenuService
+    private menuService: MenuService,
+    private primengConfig: PrimeNGConfig
   ) {}
   ngOnInit(): void {
     this.menuService.addMenuItems();
-
-    this.isLoggedIn = this.storageService.isLoggedIn();
-    if (this.isLoggedIn) {
-      const user = this.storageService.getUser();
-      this.username = user.Username;
+    this.primengConfig.ripple = true;
+    try {
+      this.isLoggedIn = this.storageService.isLoggedIn();
+      if (this.isLoggedIn) {
+        const user = this.storageService.getUser();
+        this.username = user.username;
+      }
+    } catch (e) {
+      this.storageService.clean();
     }
   }
 }

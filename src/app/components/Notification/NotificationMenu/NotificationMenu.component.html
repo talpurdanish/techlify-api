@@ -1,0 +1,19 @@
+<div (mouseenter)="mouseEnter($event)" pBadge [value]="notification?.Count" severity="danger" class="notification-icon">
+  <i class="pi pi-bell"></i>
+</div>
+<p-overlayPanel #op [showCloseIcon]="false" [style]="{width: '350px'}" (onShow)="onShow()" (onHide)="onHide()"
+  styleClass="notification-panel">
+  <ng-template pTemplate>
+    <ul class="NotificationMessage">
+      <li *ngFor="let msg of messages" [ngClass]="msg.TranType">
+        <i *ngIf="msg.TranType=='Updated'" class="pi pi-pencil"></i>
+        <i *ngIf="msg.TranType=='Added'" class="pi pi-plus"></i>
+        <i *ngIf="msg.TranType=='Deleted'" class="pi pi-times"></i><span>{{msg.TranType}} a record in
+          {{msg.Table}} Table</span>
+      </li>
+    </ul>
+    <button pButton class="p-button-danger p-rounded-button" (click)="deleteNotifications();"
+      [disabled]="notification?.Count==0">Delete all Notifications</button>
+
+  </ng-template>
+</p-overlayPanel>

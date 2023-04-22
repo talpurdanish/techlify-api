@@ -1,0 +1,25 @@
+.profile-button {
+  /* border-right: 2px groove #ddd;
+  padding-right: 7px; */
+  margin: 3px 0px;
+}
+
+.profile-button::after {
+  content: "";
+  position: relative;
+  right: 0px;
+  top: -10px;
+  width: 5px;
+  height: 100%;
+  border-right: 1px groove #ddd;
+}
+
+.profile-button img {
+  width: 15px;
+  border-radius: 100%;
+  border: 1px solid #ccc;
+}
+
+.profile-button i {
+  margin-left: 5px;
+}

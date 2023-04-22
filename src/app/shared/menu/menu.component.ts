@@ -1,23 +1,33 @@
 import { StorageService } from './../../services/storage.service';
 import { MenuService } from './../../services/menu.service';
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from '../../models/menuitem';
+import { PanelMenuModule } from 'primeng/panelmenu';
 
+import { MenuItem } from 'primeng/api';
+import { Administrator } from './Administrator';
+import { Roles } from 'src/app/models/Roles';
+import { Doctor } from './Doctor';
+import { Staff } from './Staff';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css'],
 })
 export class MenuComponent implements OnInit {
-  menuItems: MenuItem[] = [];
-  constructor(
-    private menuService: MenuService,
-    private storageService: StorageService
-  ) {
+  items: MenuItem[];
+
+  constructor(private storageService: StorageService) {
     if (storageService.isLoggedIn()) {
       const user = this.storageService.getUser();
-      var role: string = user.Role;
-      this.menuItems = this.menuService.getMenu(role);
+      var role: string = user.role;
+
+      if (role == Roles.Administrator) {
+        this.items = Administrator.items;
+      } else if (role == Roles.Doctor) {
+        this.items = Doctor.items;
+      } else if (role == Roles.Staff) {
+        this.items = Staff.items;
+      }
     }
   }
 

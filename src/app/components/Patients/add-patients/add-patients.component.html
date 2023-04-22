@@ -1,0 +1,147 @@
+<div class="x_panel">
+  <div class="x_title">
+    <h2>Add Patient</h2>
+    <ul class="nav navbar-right panel_toolbox">
+      <li>
+        <a (click)="reset()"><i class="fa fa-refresh"></i> Reset</a>
+      </li>
+      <li>
+        <a (click)="samplePatchValues()">
+          <i class="fa fa-edit"></i> Sample Values
+        </a>
+      </li>
+      <li>
+        <a href="/Patients" class="red">
+          <i class="fa fa-file"></i> Back To List
+        </a>
+      </li>
+    </ul>
+    <div class="clearfix"></div>
+  </div>
+  <div class="x_content_inner">
+    <form [formGroup]="mainForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="p-fluid grid row">
+        <div class="field col-10">
+          <div class="p-fluid grid row">
+            <div class="field col-4 md:col-4">
+              <label for="uname">Name</label>
+              <input tabindex="1" id="name" formControlName="name" value="Danish" pInputText
+                [class.ng-invalid]="name.errors" />
+              <input class="form-control" tabindex="1" id="Id" formControlName="Id" type="hidden" />
+            </div>
+            <div class="field col-4 md:col-4">
+              <label for="username">Father's/Husband's Name</label>
+              <input tabindex="2" id="fatherName" formControlName="fatherName" pInputText
+                [class.ng-invalid]="fatherName.errors" />
+            </div>
+            <div class="field col-4 md:col-4">
+              <label for="address">Address</label>
+              <input value="house" tabindex="3" id="address" formControlName="address" pInputText />
+            </div>
+          </div>
+          <div class="p-fluid grid row">
+            <div class="field col-3 md:col-3">
+              <label for="DateofBirth">Date of Birth</label>
+              <p-calendar formControlName="dateofBirth" id="dateofBirth" dateFormat="dd/mm/yy" [minDate]="minDateValue"
+                [maxDate]="maxDateValue" [readonlyInput]="true" [class.ng-invalid]="dateofBirth.errors"
+                [showIcon]="true" [showOnFocus]="true"></p-calendar>
+            </div>
+            <div class="field col-3 md:col-3">
+              <label for="cnic">CNIC</label>
+              <p-inputMask id="cnic" tabindex="6" mask="99999-9999999-9" formControlName="cnic"></p-inputMask>
+            </div>
+            <div class="field col-4 md:col-4">
+              <div class="phoneno-container">
+                <div class="p-fluid grid row">
+                  <div class="field col-12">
+                    <label for="phoneType">Phone No</label>
+                  </div>
+                  <div class="field col-5">
+                    <p-dropdown [options]="phoneTypes" optionLabel="Name" optionValue="id" optionValue="id"
+                      (onChange)="onPhoneTypeSelected($event)" dataKey="value" id="phoneType" name="phoneType"
+                      formControlName="phoneType">
+                    </p-dropdown>
+                  </div>
+                  <div class="field col-7">
+                    <p-inputMask id="phoneNo" id="phoneNo" formControlName="phoneNo" tabindex="16"
+                      mask="{{phoneNoMask}}" characterPattern="[9] "></p-inputMask>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field col-2 md:col-2">
+              <label for="bloodGroup">Bloodgroup</label>
+              <input class="form-control" tabindex="1" id="bloodGroup" formControlName="bloodGroup" type="hidden" />
+              <p-dropdown [options]="bloodgroupsList" optionLabel="Name" optionValue="Name" [showClear]="false"
+                placeholder="Select Bloodgroup" id="bloodGroup" dataKey="value"
+                (onChange)="OnBloodgroupSelected($event)">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="p-fluid grid row">
+            <div class="field col-4 md:col-4">
+
+              <label for="province">Province</label>
+              <p-dropdown [options]="provincesList" optionLabel="Name" optionValue="id" placeholder="Select a Province"
+                (onChange)="onProvinceSelected($event)" id="province" dataKey="value" id="provinceId" name="provinceId"
+                formControlName="provinceId">
+              </p-dropdown>
+
+            </div>
+            <div class="field col-4 md:col-4">
+              <label for="city">City</label>
+              <p-dropdown [options]="citiesList" optionLabel="Name" optionValue="Name" placeholder="Select a City"
+                id="city" id="cityId" name="cityId" formControlName="cityId" dataKey="value">
+              </p-dropdown>
+            </div>
+            <div class="field col-4 md:col-4">
+              <label for="gender">Gender</label>
+              <div [class.ng-invalid]="gender?.invalid" class="radio-control">
+                <input type="radio" name="gender" formControlName="gender" id="gender0" value="0">
+                <label for="gender0">
+                  Male</label>
+                <input type="radio" name="gender" formControlName="gender" id="gender1" value="1" />
+                <label for="gender1">
+                  Female
+                </label>
+                <input type="radio" name="gender" formControlName="gender" id="gender2" value="2" />
+                <label for="gender2"> Other</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field col-2">
+          <div class="p-fluid grid row">
+            <div class="field col-12 md:col-4">
+              <label class="control-label">Picture </label>
+              <img id="picturesrc" [src]="imageSrc" width="150px" height="154px"
+                style="margin:0 10px; border:10px solid #ccc; border-radius:5px; object-fit: cover;" />
+            </div>
+            <div class="field col-12 md:col-4">
+              <input type="file" formControlName="picture" name="picture" (change)="onFileSelected($event)" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class=" p-fluid grid row">
+        <div id="errorContainer" class="alert alert-warning text-danger p-fluid grid row col-12" role="alert"
+          *ngIf="!mainForm.valid  && isSubmitted">
+
+          <p>Form contains following {{totalErrors}} errors:</p>
+          <ul>
+            <li *ngFor="let errorStr of validationErrors">
+              {{errorStr.error_message}}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="p-fluid grid row">
+
+        <div class="field col-12 md:col-4">
+          <input type="submit" value="Save" class="btn btn-success btn-filled" />
+          <input type="button" value="Reset" class="btn btn-danger btn-filled" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

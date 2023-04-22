@@ -1,0 +1,168 @@
+.patient-stats {
+  margin: 5px 0px !important;
+}
+.count,
+.count-detail,
+.count-detail-title,
+.count-detail-button {
+  text-align: center;
+  line-height: 20pt;
+  vertical-align: middle;
+  border-radius: 1px;
+  /* border: 1px solid #bbb; */
+  padding: 10px 10px;
+
+  /* background: #2870a8;
+  background: -moz-linear-gradient(
+    111deg,
+    #2870a8 0%,
+    rgba(51, 51, 51, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    111deg,
+    #2870a8 0%,
+    rgba(51, 51, 51, 1) 100%
+  );
+  background: linear-gradient(111deg, #2870a8 0%, rgba(51, 51, 51, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2870a8", endColorstr="#333333", GradientType=1); */
+  color: #000;
+  margin: 0px;
+}
+
+.count-detail-button {
+  /*margin-left: 30px;*/
+  /* display: inline-block; */
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  border: none;
+  /* padding: 10px; */
+  /* background: none; */
+  padding: 0px;
+  border-radius: 10px;
+  margin: 5px;
+  /* background: rgb(84, 84, 84);
+  background: -moz-radial-gradient(
+    circle,
+    rgba(84, 84, 84, 1) 0%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  background: -webkit-radial-gradient(
+    circle,
+    rgba(84, 84, 84, 1) 0%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  background: radial-gradient(
+    circle,
+    rgba(84, 84, 84, 1) 0%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#545454",endColorstr="#000000",GradientType=1); */
+  /* border: 1px solid #333; */
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  /* line-height: 40px; */
+  height: 40px;
+  width: 40px;
+}
+
+.count-detail-button i {
+  line-height: 40px;
+  height: 40px;
+  width: 40px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .count-detail-button {
+    transition: none;
+  }
+}
+
+.count-detail-button:hover {
+  color: #ff0000;
+  /* background: -moz-radial-gradient(
+    circle,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(84, 84, 84, 1) 100%
+  );
+  background: -webkit-radial-gradient(
+    circle,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(84, 84, 84, 1) 100%
+  );
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(84, 84, 84, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#545454",GradientType=1); */
+
+  /* color: white; */
+}
+
+.count {
+  font-size: 18pt;
+  font-family: "ni7seg" !important;
+}
+
+.count-detail {
+  font-size: 12pt;
+  font-weight: bold;
+  /*color: #fff;*/
+}
+.count-detail-title,
+.count-detail-button {
+  background: #ddd;
+}
+
+.count-detail-title div {
+  font-size: 14pt;
+  font-weight: bold;
+  line-height: 40px;
+  display: block;
+  /* border: 1px solid red; */
+  height: 40px;
+  margin-right: 40px;
+
+  /*color: #fff;*/
+}
+
+.border-left-patient {
+  border-left: 1px solid #ddd;
+}
+
+.border-right-patient {
+  border-right: 1px solid #ddd;
+}
+.border-top-patient {
+  border-top: 1px solid #ddd;
+}
+.border-bottom-patient {
+  border-bottom: 1px solid #ddd;
+}
+
+/* ul.navbar-right {
+  background: white;
+    border: 1px solid #333;
+} */
+
+ul.navbar-right li.patient-stats {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+ul.navbar-right li.patient-stats:first-child {
+  border-right: 1px solid #ddd;
+}
+
+ul.navbar-right li.patient-stats:last-child {
+  border-left: 1px solid #ddd;
+}

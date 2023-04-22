@@ -1,4 +1,4 @@
-<accordion [collapsing]="true" *ngIf="menuItems.length > 0">
+<!-- <accordion [collapsing]="true" *ngIf="menuItems.length > 0">
   <accordion-item *ngFor="let item of menuItems" haschild="{{ item.haschild }}">
     <ng-template accordionTitle>
       <div class="flex space-x-2">
@@ -15,22 +15,8 @@
       </div>
     </ng-template>
   </accordion-item>
-</accordion>
+</accordion> -->
 
-<!-- <h3>General</h3>
-<ul class="nav side-menu" *ngIf="menuItems.length > 0">
-  <li *ngFor="let item of menuItems">
-    <a *ngIf="item.SubMenus.length > 0">
-      <i class="fa {{ item.class }}"></i> {{ item.title }}
-      <span class="fa fa-chevron-down"></span>
-      <ul class="nav child_menu">
-        <li *ngFor="let submenu; in: item.SubMenus">
-          <a href="{{ submenu.link }}">{{ submenu.title }}</a>
-        </li>
-      </ul>
-    </a>
-    <a *ngIf="item.SubMenus.length == 0" href="{{ item.link }}">
-      <i class="fa {{ item.class }}"></i> {{ item.title }}
-    </a>
-  </li>
-</ul> -->
+<p-panelMenu [multiple]="false" [model]="items"></p-panelMenu>
+<!-- <p-slideMenu [model]="items" [viewportHeight]="500" [menuWidth]="220" appendTo="body"
+  styleClass="p-panelMenu"></p-slideMenu> -->

@@ -1,13 +1,15 @@
-import { ViewRecieptsComponent } from './../../Reciepts/view-reciepts/view-reciepts.component';
+import { RecieptReportComponent } from './../../Reciepts/reciept-report/reciept-report.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonFunctions } from './../../../helper/common.function';
+import { Filter } from './../../../helper/filter';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { MessageService, LazyLoadEvent, MenuItem } from 'primeng/api';
 import {
   AfterViewInit,
   Component,
-  Inject,
-  Injector,
   OnDestroy,
   OnInit,
   ViewChild,
-  ViewContainerRef,
 } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -15,16 +17,11 @@ import { Router } from '@angular/router';
 import { User } from 'src/app/models/users';
 import { Login } from 'src/app/models/login';
 
-import { ModalService } from 'src/app/shared/modal/modal.service';
-
-import { DatatableOptions } from '../../../models/DataTableOptions';
-import { Subject } from 'rxjs';
-import { FmdcModalService } from '../fmdc-modal/fmdc-modal.service';
 import { ChangeRoleComponent } from '../change-role/change-role.component';
 import { Result } from 'src/app/models/result';
-import { ToastrService } from 'ngx-toastr';
-import { DataTableDirective } from 'angular-datatables';
-import { ChangePasswordComponent } from '../change-password/change-password.component';
+
+import { ConfirmationService } from 'primeng/api';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-view-user',
@@ -32,191 +29,273 @@ import { ChangePasswordComponent } from '../change-password/change-password.comp
   styleUrls: ['./view-user.component.css'],
 })
 export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild(DataTableDirective, { static: true })
-  datatableElement: any = DataTableDirective;
-  min: any = 0;
-  max: any = 0;
+  @ViewChild('dt') dt: Table | undefined;
   USERS: User[] = [];
+  usersSource: User[] = [];
   i = 0;
   data: any;
-  dtOptions: any = {};
-  dtTrigger: Subject<any> = new Subject<any>();
-  usersAvailable: boolean;
-  ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
-    $.fn.dataTable.ext.search.pop();
-  }
+
+  ref: DynamicDialogRef;
+  totalRecords: number;
+
+  loading: boolean;
+  selectedUser: User;
+  filterForm: FormGroup;
+
+  items: MenuItem[];
+
+  ngOnDestroy(): void {}
   currentUser: Login = new Login();
   constructor(
     public userService: UserService,
     private storageService: StorageService,
     private router: Router,
-    private modalService: ModalService,
-    private viewContainerRef: ViewContainerRef,
-    private customModal: FmdcModalService,
-    @Inject(Injector) private readonly injector: Injector
+    private messageService: MessageService,
+    private dialogService: DialogService,
+    private confirmationService: ConfirmationService,
+    private formBuilder: FormBuilder
   ) {}
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
       this.currentUser = this.storageService.getUser();
-      this.getUsers();
+      this.filterForm = this.formBuilder.group({
+        term: ['', [Validators.required]],
+      });
+
+      this.items = [
+        {
+          label: 'Edit',
+          icon: 'pi pi-fw pi-pencil',
+          command: () => this.ManageUser(1, this.selectedUser),
+        },
+        {
+          label: 'Change Role',
+          icon: 'pi pi-fw pi-sitemap',
+          command: () => this.ManageUser(2, this.selectedUser),
+        },
+        {
+          label: 'Activate/Deactivate',
+          icon: 'pi pi-fw pi-check',
+          command: () => this.ManageUser(3, this.selectedUser),
+        },
+        {
+          label: 'Reset Password',
+          icon: 'pi pi-fw pi-key',
+          command: () => this.ManageUser(4, this.selectedUser),
+        },
+        {
+          label: 'Delete',
+          icon: 'pi pi-fw pi-times',
+          command: () => this.ManageUser(5, this.selectedUser),
+        },
+      ];
     } else {
       this.router.navigate(['/login']);
     }
-
-    this.dtOptions = DatatableOptions.GetOptions('users');
   }
 
-  ngAfterViewInit(): void {
-    this.dtTrigger.next(this.dtOptions);
+  get Term() {
+    return this.filterForm.get('term');
   }
 
-  reload(): void {
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.destroy();
-      this.getUsers();
-    });
-  }
-
-  showToast(): void {
-    this.toasterService.success('');
-  }
-  modalRef;
-  open(type: string, title: string, userid: number, uname: string) {
-    if (type === 'role') {
-      this.modalRef = this.customModal.showFeaturedDialog(
-        ChangeRoleComponent,
-        userid,
-        title,
-        uname
-      );
-      this.modalRef.result.then(
-        (data: any) => {
-          if (data) this.reload();
-        },
-        (reason: any) => {}
-      );
-    } else if (type === 'pwd') {
-      this.modalRef = this.customModal.showFeaturedDialog(
-        ChangePasswordComponent,
-        userid,
-        title,
-        uname
-      );
-    } else if (type === 'gr') {
-      this.modalRef = this.customModal.showFeaturedDialog(
-        ViewRecieptsComponent,
-        userid,
-        title,
-        uname
-      );
+  getPageNumber(firstRow: number, rows: number): number {
+    let page = 1;
+    if (firstRow != 0 && rows > 0) {
+      page = Math.ceil(rows / firstRow) + 1;
     }
+    return page;
+  }
+
+  applyFilterGlobal(term: string) {
+    this.dt!.filterGlobal(term, 'contains');
+  }
+
+  loadUsers(event: LazyLoadEvent) {
+    this.loading = true;
+    this.USERS = [];
+    this.usersSource = [];
+    this.i = 0;
+    var filter: Filter;
+    if (event != null) {
+      let jsonObj = JSON.stringify(event.filters);
+      let global = JSON.parse(jsonObj);
+      if (global.global != undefined) {
+        filter = new Filter(
+          global.global.value,
+          1,
+          CommonFunctions.ComputeField(event.sortField),
+          event.sortOrder
+        );
+      }
+    }
+    this.userService.getUsers(filter).subscribe({
+      next: (output) => {
+        let results = new Result(output);
+        var data = results.results;
+        for (const prop in data) {
+          let jsonObj = JSON.stringify(data[prop]);
+          var userObj = JSON.parse(jsonObj);
+          var user = new User(userObj);
+          this.usersSource.push(user);
+          this.selectedUser = user;
+          // this.updatePicture();
+        }
+        if (this.usersSource && event != null) {
+          this.USERS = this.usersSource.slice(
+            event.first,
+            event.rows + event.first
+          );
+        } else {
+          this.USERS = this.usersSource;
+        }
+        this.loading = false;
+        this.totalRecords = this.usersSource.length;
+      },
+      error: (data) => {
+        let results = new Result(data);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'FMDC',
+          detail: results.message,
+        });
+        this.USERS = [];
+        this.usersSource = [];
+        this.loading = false;
+        this.totalRecords = this.usersSource.length;
+      },
+    });
   }
 
   getUsers(): void {
     this.USERS = [];
+    this.usersSource = [];
     this.i = 0;
-    this.userService.getUsers().subscribe({
-      next: (data) => {
-        for (const prop in data) {
-          this.USERS.push(new User(data[prop]));
-          this.updatePicture();
-        }
-        this.dtTrigger.next(this.dtOptions);
-      },
-    });
-    this.usersAvailable = this.USERS.length > 0;
   }
 
   updatePicture(): void {
-    if (this.USERS[this.i].Picture != '') {
-      this.USERS[this.i].Picturesrc = this.USERS[this.i].Picture;
-      this.USERS[this.i].hasImage = true;
+    if (
+      this.usersSource[this.i].Picture != '' &&
+      this.usersSource[this.i].Picture !== undefined &&
+      this.usersSource[this.i].ImageType != '' &&
+      this.usersSource[this.i].ImageType !== undefined
+    ) {
+      this.usersSource[this.i].Picturesrc = this.usersSource[this.i].Picture;
+      this.usersSource[this.i].hasImage = true;
     } else {
-      this.USERS[this.i].Picturesrc = '../../../../assets/images/profile.png';
-      this.USERS[this.i].hasImage = false;
+      this.usersSource[this.i].Picturesrc =
+        '../../../../assets/images/profile.png';
+      this.usersSource[this.i].hasImage = false;
     }
     this.i = this.i + 1;
   }
 
-  openModal(
-    e,
-    modalTitle: string,
-    modalText: string,
-    modalType: string,
-    open: boolean
-  ) {
-    e.preventDefault();
-    if (open) {
-      this.modalService.setRootViewContainerRef(this.viewContainerRef);
-      this.modalService.addDynamicComponent(modalTitle, modalText, modalType);
+  convertToImage(binary: any, imageType: string): any {
+    var slashIndex = binary.indexOf('base64');
+    var base64 = true;
+    if (slashIndex == -1) {
+      slashIndex = binary.indexOf('/');
+      base64 = false;
     }
+    const newIndex = slashIndex + (base64 ? 6 : 0);
+    const newBinary = binary.substring(newIndex, binary.length - newIndex);
+
+    const str = 'data:' + imageType + ';base64,' + newBinary;
+
+    return str;
   }
 
-  // EditUser(id: number): void {
-  //   this.router.navigate(['/register'], id });
-  // }
+  ngAfterViewInit(): void {}
 
-  ManageUser(type: string, id: number, uname: string = ''): void {
-    if (type != 'addrole') {
-      this.userService.manageUser(type, id).subscribe({
-        next: (data) => {
-          let results = new Result(data);
-          this.toasterService.success(
-            results.message,
-            'Federal Medical and Dental Clinic',
-            {
-              timeOut: 3000,
-            }
-          );
-          this.reload();
+  open(type: string, userid: any) {
+    if (type === 'role') {
+      this.ref = this.dialogService.open(ChangeRoleComponent, {
+        header: 'Change User Role',
+        data: {
+          id: userid,
         },
-        error: (data) => {
-          let results = new Result(data);
-          this.toasterService.error(
-            results.message,
-            'Federal Medical and Dental Clinic',
-            {
-              timeOut: 3000,
-            }
-          );
-        },
+        width: '40%',
+        contentStyle: { overflow: 'none' },
+        baseZIndex: 10000,
+        maximizable: false,
       });
-    } else {
-      this.open('role', 'Change Role', id, uname);
-    }
-  }
 
-  private get toasterService() {
-    return this.injector.get(ToastrService);
-  }
-
-  Delete(id: number): void {
-    var c = confirm('Are you sure you want to delete this user?');
-    if (c) {
-      this.userService.deleteUser(id).subscribe({
-        next: (data) => {
-          let results = new Result(data);
-          this.toasterService.success(
-            results.message,
-            'Federal Medical and Dental Clinic',
-            {
-              timeOut: 3000,
-            }
-          );
-          this.reload();
-        },
-        error: (data) => {
-          let results = new Result(data);
-          this.toasterService.error(
-            results.message,
-            'Federal Medical and Dental Clinic',
-            {
-              timeOut: 3000,
-            }
-          );
-        },
+      this.ref.onClose.subscribe((data: any) => {
+        if (data) {
+          this.loadUsers(null);
+        }
       });
     }
+  }
+
+  ManageUser(id: number, user: User): void {
+    switch (id) {
+      case 1:
+        this.router.navigate(['/register/' + user.id]);
+        break;
+      case 2:
+        this.open('role', user.id);
+        break;
+      case 3:
+      case 4:
+        this.userService.manageUser(id, user.id).subscribe({
+          next: (data) => {
+            let results = new Result(data);
+            this.messageService.add({
+              severity: results.success ? 'success' : 'error',
+              summary: 'FMDC',
+              detail: results.message,
+            });
+            this.loadUsers(null);
+          },
+          error: (data) => {
+            let results = new Result(data);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'FMDC',
+              detail: results.message,
+            });
+          },
+        });
+        break;
+      case 5:
+        this.Delete(user.id);
+        break;
+    }
+  }
+
+  Delete(id: any): void {
+    this.confirmationService.confirm({
+      target: event.target,
+      message: 'Are you sure that you want to proceed?',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Delete',
+      rejectLabel: 'Cancel',
+      acceptIcon: 'pi pi-fw pi-recycle',
+      rejectIcon: 'pi pi-fw pi-times',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-success',
+      accept: () => {
+        this.userService.deleteUser(id).subscribe({
+          next: (data) => {
+            let results = new Result(data);
+            this.messageService.add({
+              severity: results.success ? 'success' : 'error',
+              summary: 'FMDC',
+              detail: results.message,
+            });
+            this.loadUsers(null);
+          },
+          error: (data) => {
+            let results = new Result(data);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'FMDC',
+              detail: results.message,
+            });
+          },
+        });
+      },
+      reject: () => {},
+    });
   }
 }

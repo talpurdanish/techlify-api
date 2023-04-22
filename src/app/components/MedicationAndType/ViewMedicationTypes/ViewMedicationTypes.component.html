@@ -1,0 +1,109 @@
+<div class="x_panel">
+  <div class="x_title">
+    <h2>Medication Types</h2>
+    <ul class="nav navbar-right panel_toolbox">
+
+    </ul>
+    <div class="clearfix"></div>
+  </div>
+  <div class="x_content_inner">
+    <p-toast></p-toast>
+    <p-confirmPopup></p-confirmPopup>
+    <div class="row">
+      <div class="col-4">
+
+        <form [formGroup]="mainForm" (ngSubmit)="onSubmit()" novalidate class="fmdc-form">
+          <p-divider align="left" type="dashed"><span class="divider-header">Add Medication Type</span></p-divider>
+          <div class="p-fluid grid row">
+            <div class="field col-12 md:col-12">
+              <label for="userId">Name:</label>
+              <input tabindex="3" id="name" formControlName="name" pInputText />
+              <input id="id" formControlName="id" type="hidden" />
+            </div>
+          </div>
+
+          <div class=" p-fluid grid row">
+            <div id="errorContainer" class="alert alert-warning text-danger p-fluid grid row col-12" role="alert"
+              *ngIf="!mainForm.valid  && isSubmitted">
+
+              <p>Form contains following {{totalErrors}} errors:</p>
+              <ul>
+                <li *ngFor="let errorStr of validationErrors">
+                  {{errorStr.error_message}}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="p-fluid grid row">
+            <div class="field col-12 md:col-4">
+              <input type="submit" value="Save" class="btn btn-success btn-filled" />
+              <input type="button" value="Reset" class="btn btn-danger btn-filled" />
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="col-8">
+
+        <p-table #dt [value]="medicationTypes" styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines"
+          [tableStyle]="{'min-width': '50rem'}" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+          sortMode="single" [globalFilterFields]="['Name']"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          [rowsPerPageOptions]="[10,25,50]" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="load($event)"
+          [loading]="loading" dataKey="id" [resizableColumns]="true">
+          <ng-template pTemplate="caption">
+            <p-toolbar>
+              <div class="p-toolbar-group-start">
+                <p-button label="" (click)="load(null)" icon="pi pi-refresh"></p-button>
+              </div>
+              <div class="p-toolbar-group-end">
+                <div class="p-inputgroup">
+
+                  <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                  <input pInputText type="text" placeholder="Search keyword" #searchTerm />
+                  <span class="p-inputgroup-addon">
+                    <p-button label="" (click)="applyFilterGlobal(searchTerm.value)" icon="pi pi-filter"></p-button>
+                  </span>
+                </div>
+              </div>
+            </p-toolbar>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width:50px">Id</th>
+
+              <th pSortableColumn="1">Name<p-sortIcon field="1"></p-sortIcon>
+              </th>
+              <th style="width:100px">Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td>{{item.id}}</td>
+
+              <td>
+                {{ item.Name }}
+              </td>
+              <td>
+                <div class="p-inputgroup">
+                  <button type="button" class="p-button-secondary" pButton pRipple icon="pi pi-pencil"
+                    (click)="Manage(1,item)" pButton pTooltip="Edit"></button>
+                  <button type="button" class="p-button-secondary" pButton pRipple icon="pi pi-times"
+                    (click)="Manage(2,item)" pButton pTooltip="Delete"></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="8">No Medication Types found.</td>
+            </tr>
+          </ng-template>
+
+        </p-table>
+
+      </div>
+    </div>
+  </div>
+
+</div>

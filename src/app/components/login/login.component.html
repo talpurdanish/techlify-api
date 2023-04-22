@@ -67,66 +67,32 @@
   </div>
 </div> -->
 
-<form
-  name="form"
-  (ngSubmit)="f.form.valid && onSubmit()"
-  #f="ngForm"
-  novalidate
->
+<form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
   <h1>Login Form</h1>
   <div class="form-group">
     <div class="input-group mb-3">
-      <span
-        class="input-group-text"
-        [class.ng-invalid]="f.submitted && password.errors"
-        ><i class="fa fa-user"></i
-      ></span>
-      <input
-        type="text"
-        class="form-control"
-        name="username"
-        id="username"
-        [(ngModel)]="form.username"
-        required
-        #username="ngModel"
-        placeholder="Username"
-        [class.ng-invalid]="f.submitted && username.errors"
-      />
+      <span class="input-group-text" [class.ng-invalid]="f.submitted && password.errors"><i
+          class="fa fa-user"></i></span>
+      <input type="text" class="form-control" name="username" id="username" [(ngModel)]="form.username" required
+        #username="ngModel" placeholder="Username" [class.ng-invalid]="f.submitted && username.errors" />
     </div>
   </div>
 
   <div class="form-group">
     <div class="input-group mb-3">
-      <span
-        class="input-group-text"
-        [class.ng-invalid]="f.submitted && password.errors"
-        ><i class="fa fa-asterisk"></i
-      ></span>
-      <input
-        type="password"
-        class="form-control"
-        id="password"
-        name="password"
-        [(ngModel)]="form.password"
-        required
-        #password="ngModel"
-        placeholder="Password"
-        [class.ng-invalid]="f.submitted && password.errors"
-      />
+      <span class="input-group-text" [class.ng-invalid]="f.submitted && password.errors"><i
+          class="fa fa-asterisk"></i></span>
+      <input type="password" class="form-control" id="password" name="password" [(ngModel)]="form.password" required
+        #password="ngModel" placeholder="Password" [class.ng-invalid]="f.submitted && password.errors" />
     </div>
   </div>
-  <div
-    class="login_error"
-    *ngIf="f.submitted && (username.errors || password.errors || isLoginFailed)"
-  >
+  <div class="login_error" *ngIf="f.submitted && (username.errors || password.errors || isLoginFailed)">
     <span *ngIf="f.submitted && (username.errors || password.errors)">
       Username/Password is required!
     </span>
-    <span
-      *ngIf="
+    <span *ngIf="
         f.submitted && isLoginFailed && !(username.errors || password.errors)
-      "
-    >
+      ">
       {{ errorMessage }}
     </span>
   </div>

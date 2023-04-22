@@ -1,12 +1,14 @@
+import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
-import { NgbActiveModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { Component, Input, OnInit } from '@angular/core';
-import { UserService } from 'src/app/services/user.service';
+
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { StorageService } from 'src/app/services/storage.service';
 import { Result } from 'src/app/models/result';
 import { ValidationService } from 'src/app/services/Validation.service';
+import { Dialog } from 'primeng/dialog';
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-change-password',
@@ -14,23 +16,22 @@ import { ValidationService } from 'src/app/services/Validation.service';
   styleUrls: ['./change-password.component.css'],
 })
 export class ChangePasswordComponent implements OnInit {
-  @Input() id: number;
-  @Input() title: string;
-  @Input() uname: string;
   changePasswordForm: FormGroup;
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
+  id: string;
   result: Result;
   constructor(
-    public activeModal: NgbActiveModal,
-    private userService: UserService,
     private fb: FormBuilder,
     private storageService: StorageService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    public ref: DynamicDialogRef,
+    public config: DynamicDialogConfig
   ) {
     this.createForm();
+    this.id = this.config.data['id'];
   }
 
   ngOnInit(): void {
@@ -43,19 +44,35 @@ export class ChangePasswordComponent implements OnInit {
     this.changePasswordForm = this.fb.group(
       {
         oldPassword: ['', [Validators.required]],
-        newPassword: ['', [Validators.required]],
-        cfmPassword: ['', [Validators.required]],
-      },
-      {
-        validator: ValidationService.confirmPasswordValidator(
-          'newPassword',
-          'cfmPassword'
-        ),
+        newPassword: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'),
+            Validators.minLength(6),
+            Validators.maxLength(25),
+            ValidationService.matchValidator('confirmPassword', true),
+          ],
+        ],
+        cfmPassword: [
+          '',
+          [
+            Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'),
+            Validators.required,
+            ValidationService.matchValidator('newPassword'),
+          ],
+        ],
       }
+      // {
+      //   validator: ValidationService.confirmPasswordValidator(
+      //     'newPassword',
+      //     'cfmPassword'
+      //   ),
+      // }
     );
   }
-  toggleWithErrors(tooltip: NgbTooltip, hasError: boolean) {
-    if (hasError) tooltip.toggle();
+  toggleWithErrors(tooltip: Tooltip, hasError: boolean) {
+    if (hasError) tooltip.show();
   }
 
   get oldPassword() {
@@ -76,7 +93,7 @@ export class ChangePasswordComponent implements OnInit {
       var fnp = this.newPassword.value;
 
       var fUserId = this.id;
-      this.authService.changePassword(fUserId, fop, fnp).subscribe({
+      this.authService.changePassword(fop, fnp).subscribe({
         next: (data) => {
           this.result = new Result(data);
           this.errorMessage = this.result.message;

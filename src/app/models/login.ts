@@ -1,10 +1,10 @@
 export class Login {
-  Id: number = 0;
-  FirstName: string = '';
-  Username: string = '';
-  Role: string = '';
-  Token: string = '';
-  Created: string = '';
-  IsActive: boolean = false;
-  Picture: string = '';
+  id: string = '0';
+  firstName: string = '';
+  username: string = '';
+  role: string = '';
+  token: string = '';
+  created: string = '';
+  isActive: boolean = false;
+  picture: string = '';
 }

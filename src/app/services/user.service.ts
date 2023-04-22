@@ -1,38 +1,51 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
+import { Filter } from '../helper/filter';
+import { CommonFunctions } from '../helper/common.function';
 
-const API_URL = 'http://localhost:4000/api/fmdc/users/';
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-};
-const multiPartHttpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'multipart/form-data' }),
-};
+const CONTROLLER_NAME = '/users';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   constructor(private http: HttpClient) {}
-  getUsers(): Observable<any> {
-    return this.http.get(API_URL + 'GetUsers', { responseType: 'json' });
+  getUsers(filter: Filter): Observable<any> {
+    filter = filter == null ? new Filter('', 1, 1, 1) : filter;
+    return this.http.get(CommonFunctions.API_URL + CONTROLLER_NAME, {
+      params: {
+        term: filter.term,
+        searchfield: filter.searchfield,
+        sortfield: filter.sortfield,
+        order: filter.order,
+      },
+      responseType: 'json',
+    });
   }
 
-  getUser(id: number): Observable<any> {
-    return this.http.get(API_URL + 'GetUser\\' + id, { responseType: 'json' });
+  getUser(id: string): Observable<any> {
+    return this.http.get(CommonFunctions.API_URL + CONTROLLER_NAME + `/${id}`, {
+      responseType: 'json',
+    });
   }
 
-  getRoles(): Observable<any> {
-    return this.http.get(API_URL + 'GetRoles', { responseType: 'json' });
+  getDoctors(): Observable<any> {
+    return this.http.get(
+      CommonFunctions.API_URL + CONTROLLER_NAME + '/GetDoctors',
+      { responseType: 'json' }
+    );
   }
 
-  deleteUser(id: number): Observable<any> {
-    return this.http.delete(API_URL + 'Delete/' + id, httpOptions);
+  deleteUser(id: string): Observable<any> {
+    return this.http.delete(
+      CommonFunctions.API_URL + CONTROLLER_NAME + '/' + id,
+      CommonFunctions.httpOptions
+    );
   }
 
   createOrUpdate(
-    userId: string,
+    id: number,
     name: string,
     username: string,
     address: string,
@@ -41,34 +54,52 @@ export class UserService {
     cnic: string,
     pmdcNo: string,
     cityId: number,
-    roleId: number,
-    provinceId: number,
+    role: string,
     phoneNo: string,
     phoneType: string,
     picture: string
   ): Observable<any> {
-    // picture = picture.substring(23);
-    // if (picture.indexOf('==') < 0) picture = picture + '==';
-    return this.http.post(
-      API_URL,
-      {
-        userId,
-        name,
-        username,
-        address,
-        dateofBirth,
-        gender,
-        cnic,
-        pmdcNo,
-        cityId,
-        roleId,
-        provinceId,
-        phoneNo,
-        phoneType,
-        picture,
-      },
-      httpOptions
-    );
+    if (id > 0) {
+      return this.http.put(
+        CommonFunctions.API_URL + CONTROLLER_NAME,
+        {
+          id,
+          name,
+          username,
+          address,
+          dateofBirth,
+          gender,
+          cnic,
+          pmdcNo,
+          cityId,
+          role,
+          phoneNo,
+          phoneType,
+          picture,
+        },
+        CommonFunctions.httpOptions
+      );
+    } else {
+      return this.http.post(
+        CommonFunctions.API_URL + CONTROLLER_NAME,
+        {
+          id,
+          name,
+          username,
+          address,
+          dateofBirth,
+          gender,
+          cnic,
+          pmdcNo,
+          cityId,
+          role,
+          phoneNo,
+          phoneType,
+          picture,
+        },
+        CommonFunctions.httpOptions
+      );
+    }
   }
 
   uploadProgress: number;
@@ -81,9 +112,9 @@ export class UserService {
     image = image + '==';
     alert(image);
     const upload$ = this.http.post(
-      API_URL + 'UploadImageFromStream',
+      CommonFunctions.API_URL + CONTROLLER_NAME + 'UploadImageFromStream',
       { image },
-      multiPartHttpOptions
+      CommonFunctions.multiPartHttpOptions
     );
     // .pipe(finalize(() => this.reset()));
 
@@ -106,43 +137,48 @@ export class UserService {
   checkUniqueValue(
     type: string,
     value: string,
-    id: number = 0
+    id: number = -1
   ): Observable<any> {
-    return this.http.get(API_URL + type, {
-      params: { id: id, title: value },
-      responseType: 'json',
-    });
+    if (id <= 0) id = -1;
+    return this.http.get(
+      CommonFunctions.API_URL + CONTROLLER_NAME + `/${type}`,
+      {
+        params: { value: value, id: id ?? -1 },
+        responseType: 'json',
+      }
+    );
   }
 
-  manageUser(type: string, userId: number): Observable<any> {
+  manageUser(type: number, userId: any): Observable<any> {
     var url: string = '';
 
     switch (type) {
-      case 'resetpwd':
-        url = API_URL + 'ResetPassword\\' + userId;
+      case 4:
+        url =
+          CommonFunctions.API_URL +
+          CONTROLLER_NAME +
+          '/resetpassword/' +
+          userId;
         break;
-      case 'actdeactuser':
-        url = API_URL + 'ToggleUserStatus\\' + userId;
+      case 3:
+        url =
+          CommonFunctions.API_URL + CONTROLLER_NAME + '/changestatus/' + userId;
         break;
     }
 
-    return this.http.post(url, httpOptions);
+    return this.http.post(url, CommonFunctions.httpOptions);
   }
 
   changeRole(
-    userId: number,
+    userId: string,
 
-    roleId: number
+    roleId: string
   ): Observable<any> {
-    // picture = picture.substring(23);
-    // if (picture.indexOf('==') < 0) picture = picture + '==';
     return this.http.post(
-      API_URL + 'ChangeRole',
-      {
-        userId,
-        roleId,
-      },
-      httpOptions
+      CommonFunctions.API_URL +
+        CONTROLLER_NAME +
+        `/changerole/${userId}?value=${roleId}`,
+      CommonFunctions.httpOptions
     );
   }
 }

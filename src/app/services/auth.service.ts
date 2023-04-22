@@ -1,41 +1,44 @@
+import { CommonFunctions } from './../helper/common.function';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-const AUTH_API = 'http://localhost:4000/api/fmdc/users/';
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-};
+import { CryptoHandler } from '../security/crypto-handler';
+import { RSAHelper } from '../security/RSAHelper';
+
+const CONTROLLER_NAME = '/users/';
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cryptoHandler: RSAHelper) {}
   login(username: string, password: string): Observable<any> {
+    const pwd = this.cryptoHandler.encrypt(password);
     return this.http.post(
-      AUTH_API + 'login',
+      CommonFunctions.API_URL + CONTROLLER_NAME + 'login',
       {
         username,
-        password,
+        password: pwd,
       },
-      httpOptions
+      CommonFunctions.httpOptions
     );
   }
-  changePassword(
-    userid: number,
-    oldpassword: string,
-    newpassword: string
-  ): Observable<any> {
+  changePassword(oldpassword: string, newpassword: string): Observable<any> {
+    const oPwd = this.cryptoHandler.encrypt(oldpassword);
+    const nPwd = this.cryptoHandler.encrypt(newpassword);
     return this.http.post(
-      AUTH_API + 'ChangePassword',
+      CommonFunctions.API_URL + CONTROLLER_NAME + 'ChangePassword',
       {
-        userid,
-        oldpassword,
-        newpassword,
+        oldpassword: oPwd,
+        newpassword: nPwd,
       },
-      httpOptions
+      CommonFunctions.httpOptions
     );
   }
   logout(): Observable<any> {
-    return this.http.get(AUTH_API + 'logout', {});
+    return this.http.get(
+      CommonFunctions.API_URL + CONTROLLER_NAME + 'logout',
+      {}
+    );
   }
 }

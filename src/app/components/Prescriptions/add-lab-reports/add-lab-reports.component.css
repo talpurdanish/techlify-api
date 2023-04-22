@@ -1,0 +1,15 @@
+.checkboxes-list {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+}
+
+ul.checkboxes-list li .label {
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+/* ul.checkboxes-list li {
+  float: left;
+  margin-left: 5px;
+} */

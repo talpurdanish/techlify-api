@@ -1,0 +1,134 @@
+<p-toast></p-toast>
+<div class="x_panel">
+  <div class="x_title">
+    <h2>Prescriptions List</h2>
+
+    <div class="clearfix"></div>
+  </div>
+  <div class="x_content_inner">
+    <div class="row">
+      <div class="col-12">
+
+        <p-table #dt [value]="prescriptions" id="prescriptionsDataTable"
+          styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [paginator]="true" [rows]="5"
+          [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          [rowsPerPageOptions]="[5,10,25,50]" [totalRecords]="totalRecords" [lazy]="true" [loading]="loading"
+          (onLazyLoad)="load($event)" dataKey="id" [resizableColumns]="true" selectionMode="single"
+          [(selection)]="selectedPrescription" (onRowSelect)="showDetails()">
+          <ng-template pTemplate="caption">
+            <p-toolbar>
+              <div class="p-toolbar-group-start">
+                <p-button label="" (click)="load(null)" icon="pi pi-refresh"></p-button>
+              </div>
+              <div class="p-toolbar-group-end">
+                <div class="p-inputgroup">
+
+                  <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                  <input pInputText type="text" placeholder="Search keyword" #searchTerm />
+                  <span class="p-inputgroup-addon">
+                    <p-button label="" (click)="applyFilterGlobal(searchTerm.value)" icon="pi pi-filter"></p-button>
+                  </span>
+                </div>
+              </div>
+            </p-toolbar>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th [style]="{'width':'20px'}">Id</th>
+              <th pSortableColumn="1">Date<p-sortIcon field="Date"></p-sortIcon></th>
+              <th pSortableColumn="2">Doctor<p-sortIcon field="Doctor"></p-sortIcon>
+              </th>
+              <th pSortableColumn="3" [style]="{'width':'120px'}">Patient<p-sortIcon field="Patient"></p-sortIcon>
+              </th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr [pSelectableRow]="item">
+              <td>{{item.id}}</td>
+              <td>
+                {{ item.Date }} {{item.StartDtTime}}
+              </td>
+              <td>
+                {{ item.Doctor}}
+              </td>
+              <td>
+                {{ item.PatientName }} ({{ item.PatientNumber }})
+              </td>
+
+              <td class="action-column">
+                <div class="input-group">
+                  <button type="button" class="p-button-secondary" pButton pRipple icon="pi pi-print"
+                    (click)="Manage(1,item)" pTooltip="Print Prescription"></button>
+                  <button type="button" class="p-button-secondary" pButton pRipple icon="pi pi-times"
+                    (click)="Manage(3,item)" pTooltip="Delete" *ngIf="isAdmin"></button>
+                </div>
+              </td>
+
+
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="10">No Prescriptions found.</td>
+            </tr>
+          </ng-template>
+
+        </p-table>
+      </div>
+      <div class="row">
+        <div class="p-fluid grid row prescription-details" *ngIf="show">
+          <div class="field col-3 md:col-3">
+            <p-panel header="Vitals">
+              <div class="vitals">
+                <span class="vitals-header"><b>BP:</b>
+                  <p>{{selectedPrescription.Bp}} </p>
+                  <sub>mm/hg</sub>
+                </span>
+                <span class="vitals-header"><b>Pulse:</b>
+                  <p>{{selectedPrescription.Pulse}}</p>
+                  <sub></sub>
+                </span>
+                <span class="vitals-header"><b>BSR:</b>
+                  <p>{{selectedPrescription.Bsr}}</p>
+                  <sub></sub>
+                </span>
+                <span class="vitals-header"><b>Temp:</b>
+                  <p>{{selectedPrescription.Temp}}</p>
+                  <sub>deg C</sub>
+                </span>
+                <span class="vitals-header"><b>Wt:</b>
+                  <p>{{selectedPrescription.Wt}}</p>
+                  <sub>kgs</sub>
+                </span>
+                <span class="vitals-header"><b>Ht:</b>
+                  <p>{{selectedPrescription.Ht}}</p>
+                  <sub>cms</sub>
+                </span>
+              </div>
+            </p-panel>
+          </div>
+          <div class="field col-6 md:col-6">
+            <p-panel header="Medications">
+              <ul>
+                <li *ngFor="let med of selectedPrescription.MedicineStrings">
+                  {{med}}
+                </li>
+              </ul>
+            </p-panel>
+          </div>
+          <div class="field col-3 md:col-3">
+            <p-panel header="Tests">
+              <ul>
+                <li *ngFor="let test of selectedPrescription.TestNames">
+                  {{test}}
+                </li>
+              </ul>
+            </p-panel>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -30,7 +30,6 @@ export class LogoutComponent implements OnInit {
         returnValue = true;
       },
       error: (err) => {
-        console.log(err);
         returnValue = false;
       },
     });

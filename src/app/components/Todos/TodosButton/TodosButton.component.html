@@ -1,0 +1,13 @@
+<div class="flex justify-content-center profile-button">
+  <button pButton class="p-button-link" (click)="op.toggle($event)">
+    <i class=" pi pi-list"></i>
+    <span class="ml-2 font-bold">Tasks</span>
+    <span class="badge">{{totalTasks}}</span>
+    <i class="pi pi-angle-down" style="margin-left:5px;"></i>
+
+  </button>
+</div>
+
+<p-overlayPanel #op>
+  <app-todo (UpdateTotalTasks)=" updateTotalTasks($event)"></app-todo>
+</p-overlayPanel>

@@ -1,0 +1,171 @@
+<div class="x_panel">
+  <div class="x_title">
+    <h2>Reports List</h2>
+
+    <div class="clearfix"></div>
+  </div>
+  <div class="x_content_inner">
+    <p-toast></p-toast>
+    <p-confirmPopup></p-confirmPopup>
+    <div class="row">
+      <div class="col-4" *ngIf="isAdmin || isStaff">
+
+        <form [formGroup]="mainForm" (ngSubmit)="onSubmit()" novalidate class="fmdc-form">
+          <p-divider align="left" type="dashed"><span class="divider-header">Create Report</span></p-divider>
+          <div class="p-fluid grid row">
+            <div class="field col-12 md:col-12">
+              <label for="deliveryDate">Delivery Date & Time: <sup class="warning">*</sup></label>
+              <p-calendar formControlName="deliveryDate" dateFormat="dd/mm/yy" [minDate]="minDateValue"
+                [readonlyInput]="true" [class.ng-invalid]="deliveryDate.errors" [showIcon]="true" [showTime]="true"
+                inputId="icon" (onSelect)="deliveryDateChanged($event)"
+                (onInput)="deliveryDateChanged($event)"></p-calendar>
+              <input type="hidden" formControlName="deliveryTime" />
+            </div>
+            <!-- <div class="field col-6 md:col-6">
+              <label for="deliveryTime">Delivery Time: <sup class="warning">*</sup></label>
+
+              <p-calendar formControlName="deliveryTime" [readonlyInput]="true" dateFormat="hhmm" hourFormat="24"
+                [timeOnly]="true" [showTime]="true" [showIcon]="true"></p-calendar>
+            </div> -->
+          </div>
+
+          <div class="p-fluid grid row">
+            <div class="field col-12 md:col-12">
+              <label for="testId">Test:<sup class="warning">*</sup></label>
+              <p-dropdown [options]="tests" optionLabel="Name" optionValue="id" placeholder="Select a Test" id="type"
+                dataKey="value" formControlName="testId" [class.ng-invalid]="testId?.errors">
+              </p-dropdown>
+
+            </div>
+          </div>
+          <div class="p-fluid grid row">
+            <div class="field col-12 md:col-12">
+              <label for="patientId">Patient:<sup class="warning">*</sup></label>
+              <p-dropdown [options]="patients" optionLabel="Name" optionValue="id" placeholder="Select a Patient"
+                id="type" dataKey="value" formControlName="patientId" [class.ng-invalid]="patientId?.errors">
+              </p-dropdown>
+
+            </div>
+          </div>
+          <div class="p-fluid grid row">
+            <div class="field col-12 md:col-12">
+              <label for="doctorId">Doctor:<sup class="warning">*</sup></label>
+              <p-dropdown [options]="doctors" optionLabel="Name" optionValue="id" placeholder="Select a Doctor"
+                id="type" dataKey="value" formControlName="doctorId" [class.ng-invalid]="doctorId?.errors">
+              </p-dropdown>
+
+            </div>
+          </div>
+          <div class="p-fluid grid row">
+            <div class="field col-12 md:col-12">
+              <label for="note">Note: <sup class="warning">(Max 1000 chars)</sup></label>
+              <textarea tabindex="3" formControlName="note" pInputTextarea [autoResize]="true" maxlength="1000"
+                [class.ng-invalid]="note?.errors"></textarea>
+            </div>
+          </div>
+          <div class=" p-fluid grid row">
+            <div id="errorContainer" class="alert alert-warning text-danger p-fluid grid row col-12" role="alert"
+              *ngIf="!mainForm.valid  && isSubmitted">
+
+              <p>Form contains following {{totalErrors}} errors:</p>
+              <ul>
+                <li *ngFor="let errorStr of validationErrors">
+                  {{errorStr.error_message}}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="p-fluid grid row">
+            <div class="field col-12 md:col-4">
+              <input type="submit" value="Save" class="btn btn-success btn-filled" />
+              <input type="button" value="Reset" class="btn btn-danger btn-filled" />
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div [ngClass]="{'col-8': isAdmin || isStaff, 'col-12' : isDoctor }">
+        <p-table #dt [value]="reports" id="patientsDatatable"
+          styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [tableStyle]="{'min-width': '30rem'}"
+          [paginator]="true" [rows]="10" [showCurrentPageReport]="true" sortMode="single"
+          [globalFilterFields]="['TestName','PatientName','Doctor','Status']"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          [rowsPerPageOptions]="[10,25,50]" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="load($event)"
+          [loading]="loading" dataKey="id" selectionMode="single" [(selection)]="selectedReport"
+          [resizableColumns]="true" (onRowSelect)="completeReport($event)">
+          <ng-template pTemplate="caption">
+            <p-toolbar>
+              <div class="p-toolbar-group-start">
+                <p-button label="" (click)="load(null)" icon="pi pi-refresh"></p-button>
+              </div>
+              <div class="p-toolbar-group-end">
+                <div class="p-inputgroup">
+                  <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                  <input pInputText type="text" placeholder="Search keyword" #searchTerm />
+                  <span class="p-inputgroup-addon">
+                    <p-button label="" (click)="applyFilterGlobal(searchTerm.value)" icon="pi pi-filter"></p-button>
+                  </span>
+                </div>
+              </div>
+            </p-toolbar>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="1">Date<p-sortIcon field="ReportDate"></p-sortIcon></th>
+              <th pSortableColumn="2">Delivery Date<p-sortIcon field="ReportDeliveryDate"></p-sortIcon></th>
+              <th pSortableColumn="3">Test<p-sortIcon field="TestName"></p-sortIcon></th>
+              <th pSortableColumn="3">Patient<p-sortIcon field="PatientName"></p-sortIcon></th>
+              <th pSortableColumn="4">Doctor<p-sortIcon field="Doctor"></p-sortIcon></th>
+              <th pSortableColumn="5">Status<p-sortIcon field="Status"></p-sortIcon></th>
+              <th>Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr [pSelectableRow]="item">
+              <td>
+                {{ item.ReportDate }}
+              </td>
+
+              <td>
+                {{ item.ReportDeliveryDate}}
+              </td>
+
+              <td>
+                {{ item.TestName}}
+              </td>
+              <td>
+                {{ item.PatientName }}
+              </td>
+              <td>
+                {{ item.Doctor }}
+              </td>
+              <td>
+                {{ item.Status }}
+              </td>
+              <td>
+                <div class="p-inputgroup">
+                  <button type="button" pButton class="p-button-secondary" icon="pi pi-print" (click)="open(item.id)"
+                    [disabled]="item.Status !='Completed'" pTooltip="Print"></button>
+                  <!-- <button type="button" pButton class="p-button-secondary" icon="pi pi-fw pi-angle-double-right"
+                (click)="completeReport(item.id)" [disabled]="item.Status =='Completed'"
+                pTooltip="Complete Report"></button> -->
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6">No Reports found.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div style="margin-top:10px;" *ngIf="isAdmin || isStaff">
+          <p-panel *ngIf="showUpdate">
+            <app-update-report [ID]="selectedId" (UpdateLabTests)="reloadTable($event)"></app-update-report>
+          </p-panel>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

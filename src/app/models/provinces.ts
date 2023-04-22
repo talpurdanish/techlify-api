@@ -1,4 +1,9 @@
 export class Province {
-  Id?: any;
+  id?: any;
   Name?: string;
+
+  constructor(data: any) {
+    this.id = data.id;
+    this.Name = data.Name;
+  }
 }

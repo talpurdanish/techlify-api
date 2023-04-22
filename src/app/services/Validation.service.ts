@@ -1,7 +1,15 @@
-import { AbstractControl, AsyncValidatorFn, FormGroup } from '@angular/forms';
+import { CommonFunctions } from './../helper/common.function';
+import {
+  AbstractControl,
+  AsyncValidatorFn,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+} from '@angular/forms';
 import { map } from 'rxjs';
 import { Result } from '../models/result';
 import { UserService } from './user.service';
+import { PatientService } from './patient.service';
 
 export class ValidationService {
   static getValidatorErrorMessage(validatorName: string, validatorValue?: any) {
@@ -55,60 +63,117 @@ export class ValidationService {
   static usernameValidator(user: UserService): AsyncValidatorFn {
     return (control: AbstractControl) => {
       var id = control?.parent.get('userId').value;
-      id = id == '' ? 0 : id;
+
       return user
-        .checkUniqueValue('CheckUsername', control?.value, id)
-        .pipe(map((user) => (user ? { usernameExists: true } : null)));
+        .checkUniqueValue('checkusername', control?.value, id)
+        .pipe(
+          map((user) =>
+            !this.getValidatorResults(user) ? { usernameExists: true } : null
+          )
+        );
     };
+  }
+
+  private static getValidatorResults(user: any) {
+    let jsonObj = JSON.stringify(user);
+    let result = JSON.parse(jsonObj);
+
+    var notExists = result.message == undefined || result.message == false;
+
+    return notExists;
   }
 
   static cnicValidator(user: UserService): AsyncValidatorFn {
     return (control: AbstractControl) => {
       var id = control?.parent.get('userId').value;
-      id = id == '' ? 0 : id;
+
       return user
-        .checkUniqueValue('CheckCNIC', this.changeCNICValue(control.value), id)
-        .pipe(map((user) => (user ? { cnicExists: true } : null)));
+        .checkUniqueValue(
+          'checkcnic',
+          CommonFunctions.changeCNICValue(control?.value),
+          id
+        )
+        .pipe(
+          map((user) =>
+            !this.getValidatorResults(user) ? { cnicExists: true } : null
+          )
+        );
     };
   }
-
   static pmdcNoValidator(user: UserService): AsyncValidatorFn {
     return (control: AbstractControl) => {
       var id = control?.parent.get('userId').value;
-      id = id == '' ? 0 : id;
+
       return user
-        .checkUniqueValue('CheckPMDCNo', control.value, id)
-        .pipe(map((user) => (user ? { pmdcnoExists: true } : null)));
+        .checkUniqueValue('checkpmdcno', control.value, id)
+        .pipe(
+          map((user) =>
+            !this.getValidatorResults(user) ? { pmdcnoExists: true } : null
+          )
+        );
     };
   }
 
-  static changeCNICValue(value: string): string {
-    var start = value.substring(0, 5);
-    var middle = value.substring(5, 12);
-    var end = value.substring(12, 13);
+  static patientcnicValidator(service: PatientService): AsyncValidatorFn {
+    return (control: AbstractControl) => {
+      var id = control?.parent.get('Id').value;
 
-    return start + '-' + middle + '-' + end;
+      return service
+        .checkUniqueValue(
+          'checkcnic',
+          CommonFunctions.changeCNICValue(control?.value),
+          id
+        )
+        .pipe(
+          map((user) =>
+            !this.getValidatorResults(user) ? { cnicExists: true } : null
+          )
+        );
+    };
   }
 
-  static confirmPasswordValidator(
-    controlName: string,
-    matchingControlName: string
-  ) {
-    return (formGroup: FormGroup) => {
-      let control = formGroup.controls[controlName];
-      let matchingControl = formGroup.controls[matchingControlName];
+  static greaterThan(matchTo: string, check: string = ''): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      // if (control.parent) {
+      //   const c = (control.parent?.controls as any)[matchTo] as AbstractControl;
+      //   if (c) {
+      //     console.log('c is valid');
+      //     c.updateValueAndValidity();
+      //   }
+
+      //   return null;
+      // }
 
       if (
-        matchingControl.errors &&
-        !matchingControl.errors['passwordMismatch']
+        check != '' &&
+        !!control.parent &&
+        !!control.parent.value &&
+        !(control.parent?.controls as any)[check].value
       ) {
         return null;
       }
-      if (control.value !== matchingControl.value) {
-        matchingControl.setErrors({ passwordMismatch: true });
-      } else {
-        matchingControl.setErrors(null);
+      return !!control.parent &&
+        !!control.parent.value &&
+        control.value > (control.parent?.controls as any)[matchTo].value
+        ? null
+        : { greaterThan: true };
+    };
+  }
+
+  static matchValidator(matchTo: string, reverse?: boolean): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.parent && reverse) {
+        const c = (control.parent?.controls as any)[matchTo] as AbstractControl;
+        if (c) {
+          c.updateValueAndValidity();
+        }
+        return null;
       }
+      return !!control.parent &&
+        !!control.parent.value &&
+        control.value === (control.parent?.controls as any)[matchTo].value
+        ? null
+        : { passwordMismatch: true };
     };
   }
 }

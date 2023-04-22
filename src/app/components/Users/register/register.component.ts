@@ -1,27 +1,21 @@
+import { ProvinceService } from 'src/app/services/province.service';
 import { CommonFunctions } from './../../../helper/common.function';
 import { ValidationService } from 'src/app/services/Validation.service';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from 'src/app/services/user.service';
 import { CityService } from './../../../services/city.service';
-import { Component, Inject, Injector, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
-import { ProvincesService } from 'src/app/services/provinces.service';
 import { Province } from 'src/app/models/provinces';
-import { City } from 'src/app/models/city';
-import { Role } from 'src/app/models/Role';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { StorageService } from 'src/app/services/storage.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, ReplaySubject } from 'rxjs';
 import { Result } from 'src/app/models/result';
-import { ToastrService } from 'ngx-toastr';
 import { User } from 'src/app/models/users';
+import { MessageService } from 'primeng/api';
+import { DropdownFilterOptions } from 'primeng/dropdown';
+import { AllValidationErrors } from 'src/app/lib/validators/AllValidationErrors';
 
 @Component({
   selector: 'app-register',
@@ -31,68 +25,87 @@ import { User } from 'src/app/models/users';
 export class RegisterComponent implements OnInit {
   @Input() requiredFileType: string;
 
-  fileName = '';
-  profilepic = '';
   isSuccessful = false;
   isSignUpFailed = false;
   isSubmitted = false;
   errorMessage = '';
-  provincesList: Province[] = [];
-  rolesList: Role[] = [];
-  citiesList: City[] = [];
+  provincesList = [];
+  rolesList = [];
+  citiesList = [];
+  phoneTypes = [];
+  genders = [];
   currentDate: Date = new Date();
-  todaymax2: NgbDateStruct;
-  startDate: NgbDateStruct;
-  userForm: FormGroup;
+  minDateValue: Date;
+  maxDateValue: Date = new Date();
+
+  mainForm: FormGroup;
   isEdit: boolean = false;
 
+  selectedProvince: Province;
+  filterValue = '';
+
+  phoneNoMask: string;
+  imageSrc: string = '../../../../assets/images/profile.png';
+
   constructor(
-    private provinceService: ProvincesService,
+    private provinceService: ProvinceService,
     private cityService: CityService,
     private userService: UserService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private storageService: StorageService,
     private router: Router,
-
-    @Inject(Injector) private readonly injector: Injector
+    private messageService: MessageService
   ) {
-    const year = this.currentDate.getFullYear();
-    const month = this.currentDate.getMonth();
-    const day = this.currentDate.getDate();
-    this.todaymax2 = { year: year, month: month + 1, day: day };
     this.createForm();
+    this.phoneTypes = [
+      { Name: 'Mobile', id: '0' },
+      { Name: 'Landline', id: '1' },
+    ];
+    this.genders = [
+      { Name: 'Male', id: '0' },
+      { Name: 'Female', id: '1' },
+      { Name: 'Other', id: '2' },
+    ];
+    this.rolesList = [
+      { Name: 'Administrator', id: '0' },
+      { Name: 'Doctor', id: '1' },
+      { Name: 'Staff', id: '2' },
+    ];
   }
-  private get toasterService() {
-    return this.injector.get(ToastrService);
-  }
+
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
-      // this.PopulateEditvalue();
+      this.cityId.disable();
       this.FillProvinceList();
-      this.FillCitiesList(1);
-      this.FillRolesList();
-      this.startDate = this.todaymax2;
+      this.username.enable();
       this.route.params.subscribe((param) => {
-        console.log(param);
         if (param && param['id']) {
           this.userService.getUser(param['id']).subscribe({
-            next: (data) => {
-              let jsonObj = JSON.stringify(data);
-              let result = JSON.parse(jsonObj) as User;
-              this.PopulateValues(result);
-              this.isEdit = true;
+            next: (output) => {
+              let results = new Result(output);
+              var data = results.results;
+              if (results.success) {
+                let jsonObj = JSON.stringify(data);
+                var userObj = JSON.parse(jsonObj);
+                var user = new User(userObj);
+                this.isEdit = true;
+
+                this.PopulateValues(user);
+                this.username.disable();
+              } else {
+                this.router.navigate(['/Users']);
+              }
             },
             error: (err) => {
               let results = new Result(err);
-              this.toasterService.error(
-                results.message,
-                'Federal Medical and Dental Clinic',
-                {
-                  timeOut: 3000,
-                }
-              );
-              this.router.navigate(['/users']);
+              this.messageService.add({
+                severity: 'error',
+                summary: 'FMDC',
+                detail: results.message,
+              });
+
+              // this.router.navigate(['/users']);
             },
           });
         }
@@ -102,52 +115,27 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  PopulateEditvalue(): void {
-    let user = JSON.stringify(history.state.data);
-
-    if (user != undefined) {
-      this.userService.getUser(history.state.data.userId).subscribe({
-        next: (data) => {
-          // let jsonObj = JSON.stringify(data);
-          let result = new User(data);
-
-          this.PopulateValues(result);
-        },
-        error: (err) => {
-          let results = new Result(err);
-          this.toasterService.error(
-            results.message,
-            'Federal Medical and Dental Clinic',
-            {
-              timeOut: 3000,
-            }
-          );
-        },
-      });
-    }
-  }
-
   // Fill Methods
   FillCitiesList(provinceId: number): void {
     this.citiesList = [];
 
     this.cityService.getCities(provinceId).subscribe({
       next: (data) => {
-        for (const prop in data) {
-          var city: City = Object.assign(new City(), data[prop]);
-
-          this.citiesList.push(city);
+        let results = new Result(data);
+        var cities = results.results;
+        for (const prop in cities) {
+          var cObj = JSON.stringify(cities[prop]);
+          var city = JSON.parse(cObj);
+          this.citiesList.push({ Name: city.name, id: city.id });
         }
       },
       error: (data) => {
         let results = new Result(data);
-        this.toasterService.error(
-          results.message,
-          'Federal Medical and Dental Clinic',
-          {
-            timeOut: 3000,
-          }
-        );
+        this.messageService.add({
+          severity: 'error',
+          summary: 'FMDC',
+          detail: results.message,
+        });
       },
     });
   }
@@ -155,196 +143,52 @@ export class RegisterComponent implements OnInit {
   FillProvinceList(): void {
     this.provinceService.getProvinces().subscribe({
       next: (data) => {
-        for (const prop in data) {
-          var province: Province = Object.assign(new Province(), data[prop]);
-
-          this.provincesList.push(province);
+        let results = new Result(data);
+        var provinces = results.results;
+        for (const prop in provinces) {
+          var pObj = JSON.stringify(provinces[prop]);
+          var province = JSON.parse(pObj);
+          this.provincesList.push({ Name: province.name, id: province.id });
         }
+        this.cityId.enable();
       },
       error: (err) => {
         let results = new Result(err);
-        this.toasterService.error(
-          results.message,
-          'Federal Medical and Dental Clinic',
-          {
-            timeOut: 3000,
-          }
-        );
-      },
-    });
-  }
-
-  onProvinceSelected(event): void {
-    const value = event.target.value;
-    if (value > 0) {
-      this.FillCitiesList(value);
-    }
-    // this.selectedProvince = value;
-  }
-
-  // onCitySelected(event): void {
-  //   const value = event.target.value;
-  //   this.selectedCity = value;
-  // }
-  onDateSelect(event): void {
-    this.dateofBirth.patchValue(new Date(event.target.value));
-  }
-
-  FillRolesList(): void {
-    this.userService.getRoles().subscribe({
-      next: (data) => {
-        for (const prop in data) {
-          var role: Role = Object.assign(new Role(), data[prop]);
-
-          this.rolesList.push(role);
-        }
-      },
-
-      error: (err) => {
-        let results = new Result(err);
-        this.toasterService.error(
-          results.message,
-          'Federal Medical and Dental Clinic',
-          {
-            timeOut: 3000,
-          }
-        );
-      },
-    });
-  }
-
-  changeDateofBirthFormat(value: string): string {
-    var dateArray = value.split('-');
-    var day = Number(dateArray[0]);
-    if (day < 10) {
-      dateArray[0] = '0' + dateArray[0];
-    }
-    var month = Number(dateArray[1]);
-    if (month < 10) {
-      dateArray[1] = '0' + dateArray[1];
-    }
-    var year = dateArray[2];
-    var date =
-      year + '-' + dateArray[1] + '-' + dateArray[0] + 'T00:00:00.000Z';
-    return date;
-  }
-
-  changeCNICValue(value: string): string {
-    var start = value.substring(0, 5);
-    var middle = value.substring(5, 12);
-    var end = value.substring(12, 13);
-
-    return start + '-' + middle + '-' + end;
-  }
-
-  // onRoleSelected(event): void {
-  //   this.selectedRole = event.target.value;
-  // }
-  phonePlaceHolder: string;
-  onPhoneTypeSelected(event): void {
-    const value = event.target.value;
-    if (value == 2) {
-      this.phoneNoMask = { mask: '+(92)00000-0000000' };
-      this.phonePlaceHolder = '+(92)_____-_______';
-    } else if (value == 1) {
-      this.phoneNoMask = { mask: '0300-0000000' };
-      this.phonePlaceHolder = '03__-_______';
-    }
-  }
-  //Form Submit
-  onSubmit(): void {
-    this.isSubmitted = true;
-    if (this.userForm.dirty && this.userForm.valid) {
-      var fname = this.uname.value;
-      var fusername = this.username.value;
-      var faddress = this.address.value;
-      // var fpictureURL = this.pictureURL.value;
-      var fdob = this.changeDateofBirthFormat(this.dateofBirth.value);
-      var fgender = this.gender.value;
-      var fcnic = this.changeCNICValue(this.cnic.value);
-      var fpmdcNo = this.pmdcNo.value;
-      var fcityId = this.cityId.value;
-      var froleId = this.roleId.value;
-      var fprovinceId = this.provinceId.value;
-      var fphoneNo = this.phoneNo.value;
-      var fphoneType = this.phoneType.value;
-      var fid = this.userId.value;
-      this.userService
-        .createOrUpdate(
-          this.isEdit ? fid : '-1',
-          fname,
-          fusername,
-          faddress,
-          fdob,
-          fgender,
-          fcnic,
-          fpmdcNo,
-          fcityId,
-          froleId,
-          fprovinceId,
-          fphoneNo,
-          fphoneType,
-          this.profilepic
-        )
-        .subscribe({
-          next: (data) => {
-            let result = new Result(data);
-            this.errorMessage = result.message;
-            this.isSuccessful = true;
-            this.isSignUpFailed = false;
-            this.userForm.reset();
-            this.isSubmitted = false;
-          },
-          error: (err) => {
-            let result = new Result(err);
-            this.errorMessage = result.message;
-            this.isSignUpFailed = true;
-          },
+        this.messageService.add({
+          severity: 'error',
+          summary: 'FMDC',
+          detail: results.message,
         });
+      },
+    });
+  }
+
+  onProvinceSelected(event: any): void {
+    if (event.value != undefined && event.value != '') {
+      this.FillCitiesList(event.value);
     }
   }
 
-  //Mask Variables and Function
-  cnicMask = {
-    mask: '00000-0000000-0',
-  };
-
-  phoneNoMask: { mask: string }; //   mask: this.phoneNoFunc,
-
-  onAccept() {
-    console.log('on accept');
+  onPhoneTypeSelected(event: any): void {
+    const value = CommonFunctions.getPrimeNgDropdownValue(event.value);
+    this.phoneNoMask = value == 1 ? '(999)9999999999' : '0399-9999999';
   }
-  onComplete() {
-    console.log('on complete');
+  myResetFunction(options: DropdownFilterOptions) {
+    options.reset();
+    this.filterValue = '';
   }
 
-  //File Upload Functions
-  imageSrc: string = '../../../../assets/images/profile.png';
-  onFileSelected(event) {
-    const file: File = event.target.files[0];
-    if (file) {
+  onFileSelected(event: any) {
+    if (event.target.files && event.target.files.length) {
       const reader = new FileReader();
-      if (event.target.files && event.target.files.length) {
-        const [file] = event.target.files;
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          this.imageSrc = reader.result as string;
-        };
-      }
-
-      this.convertFile(event.target.files[0]).subscribe((base64) => {
-        this.profilepic = base64;
-      });
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.imageSrc = reader.result as string;
+        this.picture.patchValue(reader.result);
+        this.imageType.patchValue(file.type);
+      };
     }
-  }
-
-  convertFile(file: File): Observable<string> {
-    const result = new ReplaySubject<string>(1);
-    const reader = new FileReader();
-    reader.readAsBinaryString(file);
-    reader.onload = (event) =>
-      result.next(btoa(event.target.result.toString()));
-    return result;
   }
 
   cancelUpload() {
@@ -353,15 +197,15 @@ export class RegisterComponent implements OnInit {
 
   reset() {
     this.userService.reset();
-    this.userForm.reset();
+    this.mainForm.reset();
   }
 
-  samplePatchValues() {
-    this.userForm.patchValue({
+  patchSampleValues() {
+    this.mainForm.patchValue({
       username: 'talpurdanish',
       uname: 'Danish',
       address: 'House no 2040 st 69 i-10/1',
-      dateofBirth: '1983/21/07',
+      dateofBirth: '07/21/1983',
       gender: 1,
       cnic: '61101-09876565-1',
       pmdcNo: '123',
@@ -376,34 +220,29 @@ export class RegisterComponent implements OnInit {
 
   PopulateValues(user: User) {
     try {
-      this.startDate = CommonFunctions.ChangeDatetoNgbDatestruct(
-        user.DateofBirth.toString()
-      );
-    } catch (e) {
-      console.log(e);
-    }
+      this.mainForm.patchValue({
+        userId: user.id,
+        username: user.Username,
+        uname: user.Name,
+        address: user.Address,
+        dateofBirth: CommonFunctions.ChangeSqlDatetoDate(
+          user.DateofBirth.toString()
+        ),
+        gender: user.Gender,
+        cnic: user.CNIC,
+        pmdcNo: user.PMDCNo,
 
-    this.userForm.patchValue({
-      userId: user.UserId,
-      username: user.Username,
-      uname: user.Name,
-      address: user.Address,
-      dateofBirth: user.DateofBirth,
-      gender: user.Gender,
-      cnic: user.CNIC,
-      pmdcNo: user.PMDCNo,
-      cityId: user.CityId,
-      roleId: user.RoleId,
-      provinceId: user.ProvinceName,
-      phoneNo: user.PhoneNo,
-      phoneType: user.PhoneType,
-      picture: user.Picture,
-      isActive: user.IsActive,
-    });
+        phoneNo: user.PhoneNo,
+        phoneType: user.PhoneType,
+        // picture: user.Picture,
+        isActive: user.IsActive,
+      });
+      this.username.disable();
+    } catch (err) {}
   }
 
   createForm() {
-    this.userForm = this.fb.group({
+    this.mainForm = this.fb.group({
       username: [
         '',
         [
@@ -414,7 +253,7 @@ export class RegisterComponent implements OnInit {
         [ValidationService.usernameValidator(this.userService)],
       ],
 
-      uname: [
+      name: [
         '',
         [
           Validators.required,
@@ -429,8 +268,8 @@ export class RegisterComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(13),
-          Validators.maxLength(13),
+          Validators.minLength(15),
+          Validators.maxLength(15),
         ],
         [ValidationService.cnicValidator(this.userService)],
       ],
@@ -447,51 +286,122 @@ export class RegisterComponent implements OnInit {
       picture: [''],
       userId: [''],
       IsActive: [''],
+      imageType: [''],
     });
   }
   get userId() {
-    return this.userForm.get('userId');
+    return this.mainForm.get('userId');
   }
   get username() {
-    return this.userForm.get('username');
+    return this.mainForm.get('username');
   }
-  get uname() {
-    return this.userForm.get('uname');
+  get name() {
+    return this.mainForm.get('name');
   }
   get address() {
-    return this.userForm.get('address');
+    return this.mainForm.get('address');
   }
   get dateofBirth() {
-    return this.userForm.get('dateofBirth');
+    return this.mainForm.get('dateofBirth');
   }
   get gender() {
-    return this.userForm.get('gender');
+    return this.mainForm.get('gender');
   }
   get cnic() {
-    return this.userForm.get('cnic');
+    return this.mainForm.get('cnic');
   }
   get pmdcNo() {
-    return this.userForm.get('pmdcNo');
+    return this.mainForm.get('pmdcNo');
   }
   get cityId() {
-    return this.userForm.get('cityId');
+    return this.mainForm.get('cityId');
   }
   get roleId() {
-    return this.userForm.get('roleId');
+    return this.mainForm.get('roleId');
   }
   get provinceId() {
-    return this.userForm.get('provinceId');
+    return this.mainForm.get('provinceId');
   }
   get phoneNo() {
-    return this.userForm.get('phoneNo');
+    return this.mainForm.get('phoneNo');
   }
   get phoneType() {
-    return this.userForm.get('phoneType');
+    return this.mainForm.get('phoneType');
   }
   get picture() {
-    return this.userForm.get('picture');
+    return this.mainForm.get('picture');
   }
   get IsActive() {
-    return this.userForm.get('isActive');
+    return this.mainForm.get('IsActive');
+  }
+  get imageType() {
+    return this.mainForm.get('imageType');
+  }
+
+  validationErrors: AllValidationErrors[] = [];
+  totalErrors: number;
+  onSubmit(): void {
+    this.validationErrors = AllValidationErrors.getFormValidationErrors(
+      this.mainForm.controls
+    );
+    this.totalErrors = this.validationErrors.length;
+    this.isSubmitted = true;
+    if (this.mainForm.dirty && this.mainForm.valid) {
+      var fname = this.name.value;
+      var fusername = this.username.value;
+      var faddress = this.address.value;
+      var fdob = this.dateofBirth.value;
+      var fgender = this.gender.value;
+      var fcnic = CommonFunctions.changeCNICValue(this.cnic.value);
+      var fpmdcNo = this.pmdcNo.value;
+      var fcityId = CommonFunctions.getPrimeNgDropdownValue(this.cityId.value);
+      var froleId = this.roleId.value;
+      var fprovinceId = this.provinceId.value;
+      var fphoneNo = this.phoneNo.value;
+      var fphoneType =
+        CommonFunctions.getPrimeNgDropdownValue(this.phoneType.value) + '';
+      var fid = this.userId.value;
+
+      this.userService
+        .createOrUpdate(
+          this.isEdit ? fid : '-1',
+          fname,
+          fusername,
+          faddress,
+          fdob,
+          fgender,
+          fcnic,
+          fpmdcNo,
+          fcityId,
+          froleId,
+          fphoneNo,
+          fphoneType,
+          this.picture.value
+        )
+        .subscribe({
+          next: (data) => {
+            let result = new Result(data);
+
+            this.messageService.add({
+              severity: result.success ? 'success' : 'error',
+              summary: 'FMDC',
+              detail: result.message,
+            });
+
+            if (result.success) {
+              this.mainForm.reset();
+              this.isSubmitted = false;
+            }
+          },
+          error: (err) => {
+            let results = new Result(err);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'FMDC',
+              detail: results.message,
+            });
+          },
+        });
+    }
   }
 }

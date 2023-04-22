@@ -1,40 +1,43 @@
 import { Router } from '@angular/router';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
-import { Form, FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { Role } from 'src/app/models/Role';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+
 import { StorageService } from 'src/app/services/storage.service';
 import { Result } from 'src/app/models/result';
-
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-change-role',
   templateUrl: './change-role.component.html',
   styleUrls: ['./change-role.component.css'],
 })
 export class ChangeRoleComponent implements OnInit {
-  @Input() id: number;
-  @Input() title: string;
-  @Input() uname: string;
+  @Input() id: string;
   changeRoleForm: FormGroup;
-  rolesList: Role[] = [];
+  rolesList: { Name: string; Id: Number }[] = [];
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
   result: Result;
   constructor(
-    public activeModal: NgbActiveModal,
     private userService: UserService,
     private fb: FormBuilder,
     private storageService: StorageService,
-    private router: Router
+    private router: Router,
+    public ref: DynamicDialogRef,
+    public config: DynamicDialogConfig
   ) {
     this.createForm();
+    this.id = this.config.data['id'];
   }
 
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
-      this.FillRolesList();
+      this.rolesList = [
+        { Name: 'Administrator', Id: 0 },
+        { Name: 'Doctor', Id: 1 },
+        { Name: 'Staff', Id: 2 },
+      ];
     } else {
       this.router.navigate(['/login']);
     }
@@ -48,18 +51,6 @@ export class ChangeRoleComponent implements OnInit {
 
   get roleId() {
     return this.changeRoleForm.get('roleId');
-  }
-
-  FillRolesList(): void {
-    this.userService.getRoles().subscribe({
-      next: (data) => {
-        for (const prop in data) {
-          var role: Role = Object.assign(new Role(), data[prop]);
-
-          this.rolesList.push(role);
-        }
-      },
-    });
   }
 
   onSubmit(): void {

@@ -1,0 +1,69 @@
+:root {
+  --angle: 180deg;
+}
+.side-bar-button {
+  width: 80vh;
+  height: 30px;
+  /* word-wrap: break-word;
+  text-transform: capitalize;
+  text-orientation: upright; */
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  display: inline-flex;
+  /* flex-direction: column; */
+  vertical-align: top;
+  position: absolute;
+  top: 45vh;
+  left: 80vw;
+  background: white;
+  border: 1px solid black;
+  z-index: 100000;
+  transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg); /* IE 9 */
+  -moz-transform: rotate(-90deg); /* Firefox */
+  -webkit-transform: rotate(-90deg); /* Safari and Chrome */
+  -o-transform: rotate(-90deg); /* Opera */
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 0 10px;
+}
+
+.side-bar-button i {
+  /* width: 10px; */
+  margin-right: 10px;
+  transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg); /* IE 9 */
+  -moz-transform: rotate(-90deg); /* Firefox */
+  -webkit-transform: rotate(-90deg); /* Safari and Chrome */
+  -o-transform: rotate(-90deg); /* Opera */
+}
+.side-bar-button:hover {
+  background: #ccc;
+}
+/*
+.side-bar-button {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+
+  cursor: pointer;
+  height: 50px;
+  min-width: 100px;
+  position: relative;
+
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 0 10px;
+
+  font-size: 20px;
+  vertical-align: top;
+
+
+
+.side-bar-button:active {
+  top: 1px;
+} */
