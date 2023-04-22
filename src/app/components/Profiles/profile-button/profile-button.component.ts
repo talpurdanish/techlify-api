@@ -1,26 +1,16 @@
-import { MessageService } from 'primeng/api/messageservice';
 import { Router } from '@angular/router';
-import {
-  Component,
-  HostListener,
-  Inject,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { StorageService } from 'src/app/services/storage.service';
 import { Login } from 'src/app/models/login';
 import { ChangePasswordComponent } from '../../Users/change-password/change-password.component';
 
-import { Dialog, DialogModule } from 'primeng/dialog';
+import { Dialog } from 'primeng/dialog';
 
 import { DOCUMENT } from '@angular/common';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { MenuItemContent } from 'primeng/menu';
+
 import { MenuItem } from 'primeng/api';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-profile-button',
@@ -37,6 +27,7 @@ export class ProfileButtonComponent implements OnInit {
     private storageService: StorageService,
     private router: Router,
     private dialogService: DialogService,
+    private authService: AuthService,
 
     @Inject(DOCUMENT) private document: any
   ) {
@@ -58,7 +49,7 @@ export class ProfileButtonComponent implements OnInit {
       {
         label: 'Logout',
         icon: 'pi pi-fw pi-power-off',
-        routerLink: '/Logout',
+        command: () => this.logout(),
       },
     ];
   }
@@ -73,9 +64,6 @@ export class ProfileButtonComponent implements OnInit {
   @HostListener('document:webkitfullscreenchange', ['$event'])
   @HostListener('document:mozfullscreenchange', ['$event'])
   @HostListener('document:MSFullscreenChange', ['$event'])
-  logout(): void {
-    this.router.navigate(['/Logout']);
-  }
   ToggleFullScreen(): void {
     this.chkScreenMode();
     if (!this.isFullScreen) {
@@ -138,5 +126,17 @@ export class ProfileButtonComponent implements OnInit {
       baseZIndex: 10000,
       maximizable: false,
     });
+  }
+  logout(): void {
+    if (this.storageService.isLoggedIn()) {
+      this.authService.logout().subscribe({
+        next: (res) => {
+          this.storageService.clean();
+        },
+        error: (err) => {},
+      });
+      console.log('logout called');
+    }
+    this.router.navigate(['/login']);
   }
 }

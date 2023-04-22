@@ -18,6 +18,7 @@ export class LogoutComponent implements OnInit {
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
       this.logout();
+      console.log('logout called');
     }
     this.router.navigate(['/login']);
   }
