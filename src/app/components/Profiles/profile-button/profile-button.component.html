@@ -1,7 +1,7 @@
 <p-menu #menu [model]="items" [popup]="true" styleClass="profile-menu-item"></p-menu>
 
 <div class="flex justify-content-center profile-button">
-  <button pButton class="p-button-link" (click)="menu.toggle($event)">
+  <button pButton class="p-button-primary p-button-text" (click)="menu.toggle($event)">
     <img *ngIf="currentUser.picture" [src]="currentUser.picture" alt="..." style="width:20px;" />
     <span class="ml-2 font-bold">{{ currentUser.firstName }}</span>
     <i class="pi pi-angle-down" style="margin-left:5px;"></i>

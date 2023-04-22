@@ -1,10 +1,10 @@
 .patient-stats {
   margin: 5px 0px !important;
+  width: 200px;
 }
 .count,
 .count-detail,
-.count-detail-title,
-.count-detail-button {
+.count-detail-title {
   text-align: center;
   line-height: 20pt;
   vertical-align: middle;
@@ -30,54 +30,9 @@
 }
 
 .count-detail-button {
-  /*margin-left: 30px;*/
-  /* display: inline-block; */
-  text-align: center;
-  text-decoration: none;
-  vertical-align: middle;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-  border: none;
-  /* padding: 10px; */
-  /* background: none; */
-  padding: 0px;
-  border-radius: 10px;
-  margin: 5px;
-  /* background: rgb(84, 84, 84);
-  background: -moz-radial-gradient(
-    circle,
-    rgba(84, 84, 84, 1) 0%,
-    rgba(0, 0, 0, 1) 100%
-  );
-  background: -webkit-radial-gradient(
-    circle,
-    rgba(84, 84, 84, 1) 0%,
-    rgba(0, 0, 0, 1) 100%
-  );
-  background: radial-gradient(
-    circle,
-    rgba(84, 84, 84, 1) 0%,
-    rgba(0, 0, 0, 1) 100%
-  );
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#545454",endColorstr="#000000",GradientType=1); */
-  /* border: 1px solid #333; */
-  position: absolute;
-  top: 1px;
-  right: 1px;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-
-  /* line-height: 40px; */
-  height: 40px;
-  width: 40px;
-}
-
-.count-detail-button i {
-  line-height: 40px;
-  height: 40px;
-  width: 40px;
+  width: 100% !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -88,24 +43,6 @@
 
 .count-detail-button:hover {
   color: #ff0000;
-  /* background: -moz-radial-gradient(
-    circle,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(84, 84, 84, 1) 100%
-  );
-  background: -webkit-radial-gradient(
-    circle,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(84, 84, 84, 1) 100%
-  );
-  background: radial-gradient(
-    circle,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(84, 84, 84, 1) 100%
-  );
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#545454",GradientType=1); */
-
-  /* color: white; */
 }
 
 .count {
@@ -118,8 +55,7 @@
   font-weight: bold;
   /*color: #fff;*/
 }
-.count-detail-title,
-.count-detail-button {
+.count-detail-title {
   background: #ddd;
 }
 

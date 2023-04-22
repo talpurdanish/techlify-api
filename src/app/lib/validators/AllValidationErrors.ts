@@ -24,7 +24,6 @@ export class AllValidationErrors {
       const controlErrors: ValidationErrors = controls[key].errors;
       if (controlErrors !== null) {
         Object.keys(controlErrors).forEach((keyError) => {
-          console.log('Validation Error ' + keyError);
           errors.push({
             control_name: key,
             error_name: keyError,

@@ -1,7 +1,7 @@
 .badge {
   margin-left: 5px;
-  border: 1px solid #ccc;
-  background: #2870a8;
+  /* border: 1px solid #ccc; */
+  background: rgb(111, 66, 193);
   color: white;
   font-size: 10pt;
   border-radius: 100%;

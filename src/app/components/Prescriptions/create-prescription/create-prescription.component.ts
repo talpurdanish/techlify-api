@@ -77,9 +77,11 @@ export class CreatePrescriptionComponent implements OnInit {
     if (this.isAdmin || this.isDoctor) {
       this.selectedLabTests = [];
       this.selectedLabTests = labtests;
+
       this.prescription = this.storageService.getPrescription();
       if (this.prescription == null) this.populatePrescription();
       if (this.prescription != null && this.prescription != undefined) {
+        this.prescription.Tests = [];
         this.selectedLabTests.forEach((test) => {
           this.prescription.Tests.push(test.id);
         });
@@ -158,7 +160,7 @@ export class CreatePrescriptionComponent implements OnInit {
                 let results = new Result(output);
                 var data = results.results;
                 let jsonObj = JSON.stringify(data);
-                console.log(jsonObj);
+
                 var obj = JSON.parse(jsonObj);
                 let prescription = new Prescription(obj);
                 if (prescription.PatientId > 0) {
@@ -294,6 +296,7 @@ export class CreatePrescriptionComponent implements OnInit {
                 detail: results.message,
               });
               if (results.success) {
+                // this.mainForm.reset();
                 // this.router.navigate(['/Patients']);
               }
             },

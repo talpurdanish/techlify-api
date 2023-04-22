@@ -20,7 +20,7 @@ export class CryptoHandler {
         padding: CryptoJS.pad.Pkcs7,
       }
     );
-    console.log(encrypted + ' - ' + value);
+
     return encrypted.toString();
   }
 

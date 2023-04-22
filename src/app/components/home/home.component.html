@@ -72,12 +72,12 @@
           <ng-template pTemplate="content">
             <app-pending-reports (UpdatePendingCount)="updatePendingReportsCount($event)"></app-pending-reports>
             <button pButton icon="" label="Go To Reports" class="p-button-link" (click)="backToList()"
-              style="margin:5px auto;"></button>
+              style="margin:5px auto;" *ngIf="!disabledReports"></button>
           </ng-template>
         </p-accordionTab>
       </p-accordion>
     </div>
-    <div class="col-md-6">
+    <div class=" col-md-6">
       <p-accordion [multiple]="true">
         <p-accordionTab [tabStyleClass]="hasPendingAppointments" [selected]="true" [disabled]="disabledAppointments">
           <ng-template pTemplate="header">Pending Appointments <span

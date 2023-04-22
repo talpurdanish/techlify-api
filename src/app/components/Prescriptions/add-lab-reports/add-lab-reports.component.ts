@@ -90,8 +90,9 @@ export class AddLabReportsComponent implements OnInit {
       this.selectedValues = this.mainForm.value.tests
         .map((checked, i) => (checked ? this.LabTests[i] : null))
         .filter((v) => v !== null);
-
+    console.log('mainform ' + JSON.stringify(this.selectedValues));
     this.UpdateLabTests.emit(this.selectedValues);
+    this.mainForm.reset();
   }
 
   get testsFormArray() {

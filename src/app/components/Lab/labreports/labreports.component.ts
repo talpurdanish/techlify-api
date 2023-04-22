@@ -198,7 +198,7 @@ export class LabreportsComponent implements OnInit {
 
     if (value != '') {
       const time = date.getHours() + ':' + date.getMinutes();
-      console.log(time);
+
       this.deliveryTime.patchValue(time[1]);
     }
   }
@@ -235,7 +235,6 @@ export class LabreportsComponent implements OnInit {
         const fTestId = this.testId.value;
         const fPatientId = this.patientId.value;
         const fDoctorId = this.doctorId.value;
-        console.log(fDeliveryDate);
         this.reportService
           .createOrUpdate(
             -1,

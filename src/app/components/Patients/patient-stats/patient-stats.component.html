@@ -31,33 +31,36 @@
 <div class="patient-stats">
   <div class="row">
     <div class="col-12 count-detail-title">
-      <div><i class="pi pi-heart-fill"></i> Patients Stats</div>
-      <button (click)=" UpdatePatientStats()" class="count-detail-button">
-        <i class="fa fa-refresh"></i>
+      <!-- <div><i class="pi pi-heart-fill"></i> Patients Stats</div> -->
+      <button (click)=" UpdatePatientStats()" icon="fa fa-fw fa-refresh" label="Refresh" pButton
+        class="p-button-info count-detail-button" style="display:block">
+
       </button>
     </div>
   </div>
-  <div class="row">
+  <div class=" row">
     <div class="col count-detail border-top-patient border-left-patient  border-bottom-patient">
       Males
     </div>
-    <div class="col count-detail border-top-patient border-left-patient  border-bottom-patient">
-      Females
-    </div>
-    <div class="col count-detail border-top-patient border-left-patient   border-right-patient border-bottom-patient">
-      Others
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col count red-text border-left-patient  border-bottom-patient">
+    <div class="col count red-text border-left-patient border-top-patient border-right-patient border-bottom-patient">
       {{males}}
     </div>
-    <div class="col count red-text border-left-patient  border-bottom-patient">
+  </div>
+  <div class="row">
+    <div class="col count-detail  border-left-patient    border-bottom-patient">
+      Females
+    </div>
+    <div class="col count red-text border-left-patient border-right-patient border-bottom-patient">
       {{females}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col count-detail  border-left-patient  border-bottom-patient">
+      Others
     </div>
     <div class="col count red-text border-left-patient border-right-patient border-bottom-patient">
       {{others}}
     </div>
   </div>
+
 </div>
