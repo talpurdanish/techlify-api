@@ -160,7 +160,7 @@ import { PatientStatButtonComponent } from './components/Patients/patient-stat-b
     ViewRecieptsComponent,
     SafeUrlPipe,
     TodoComponent,
-    ViewPatientComponent,
+    // ViewPatientComponent,
     AddPatientComponent,
     NotificationMenuComponent,
     PatientStatsComponent,
