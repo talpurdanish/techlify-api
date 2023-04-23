@@ -1,0 +1,296 @@
+﻿
+/* ==========================================================================
+   COMPONENTS / #DIVIDER
+   ========================================================================== */
+/* Base
+  ============================================ */
+/**
+ * Divider
+ *
+ * Prominent horizontal (and vertical) rules between other elements.
+ *
+ * The default Divider and it's `--top` modifier are intended for use on
+ * horizontal rules.
+ * e.g. `<hr class="c-divider">`
+ *
+ * With `--left` and `--right` modifiers intended to wrap content.
+ * (The default divider and `--top` modifier will also work in this manner)
+ * e.g. `<div class="c-divider c-divider--right">Some content</div>`
+ *
+ * 1. Set a transparent border on the relevant edge to prevent element collapse.
+ * 2. Reduce the `margin-bottom` by the same width as the divider in order to
+ *    keep on our baseline grid.
+ */
+.c-divider {
+    position: relative;
+    border-width: 0 0 1px 0;
+    /* 1 */
+    border-style: solid;
+    border-color: transparent;
+    margin-bottom: 19px;
+    /* 2 */
+    /**
+   * Divider - Gradient Border
+   */
+    /**
+   * Divider - Shadow
+   */
+}
+
+    .c-divider::before, .c-divider::after {
+        content: "";
+        position: absolute;
+        display: block;
+        width: 100%;
+    }
+
+    .c-divider::before {
+        /*! autoprefixer: off */
+        background: #c0c0c0;
+        background: -webkit-linear-gradient(left, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: -moz-linear-gradient(left, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: -ms-linear-gradient(left, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: -o-linear-gradient(left, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: linear-gradient(to right, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        bottom: 0;
+        height: 1px;
+    }
+
+    .c-divider::after {
+        /*! autoprefixer: off */
+        background: -webkit-radial-gradient(50% 0%, rgba(74, 74, 74, 0.15), transparent 40%);
+        background: -moz-radial-gradient(50% 0%, rgba(74, 74, 74, 0.15), transparent 40%);
+        background: -ms-radial-gradient(50% 0%, rgba(74, 74, 74, 0.15), transparent 40%);
+        background: -o-radial-gradient(50% 0%, rgba(74, 74, 74, 0.15), transparent 40%);
+        background: radial-gradient(at 50% 0%, rgba(74, 74, 74, 0.15), transparent 40%);
+        top: 100%;
+        height: 10px;
+    }
+
+/* Modifiers
+  ============================================ */
+/**
+ * Loop to generate our suite of modifiers for each divider direction:
+ *
+ *   .c-divider--right {}
+ *   .c-divider--bottom {}
+ *   .c-divider--left {}
+ */
+.c-divider--top {
+    border-width: 1px 0 0 0;
+    /**
+     * Divider gradient border.
+     *
+     * 1. Attach the border to the appropriate edge.
+     */
+    /**
+     * Divider shadow.
+     *
+     * 1. Flow the shadow over the appropriate edge.
+     */
+}
+
+    .c-divider--top::before {
+        /*! autoprefixer: off */
+        background: #c0c0c0;
+        background: -webkit-linear-gradient(left, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: -moz-linear-gradient(left, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: -ms-linear-gradient(left, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: -o-linear-gradient(left, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: linear-gradient(to right, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        bottom: 100%;
+    }
+
+    .c-divider--top::after {
+        /*! autoprefixer: off */
+        background: -webkit-radial-gradient(50% 100%, rgba(74, 74, 74, 0.15), transparent 40%);
+        background: -moz-radial-gradient(50% 100%, rgba(74, 74, 74, 0.15), transparent 40%);
+        background: -ms-radial-gradient(50% 100%, rgba(74, 74, 74, 0.15), transparent 40%);
+        background: -o-radial-gradient(50% 100%, rgba(74, 74, 74, 0.15), transparent 40%);
+        background: radial-gradient(at 50% 100%, rgba(74, 74, 74, 0.15), transparent 40%);
+        top: -11px;
+    }
+
+.c-divider--right {
+    border-width: 0 1px 1px 0;
+    margin-bottom: 0;
+    /**
+     * Divider gradient border.
+     *
+     * 1. Attach the border to the appropriate edge.
+     */
+    /**
+     * Divider shadow.
+     *
+     * 1. Flow the shadow over the appropriate edge.
+     */
+}
+
+    .c-divider--right::before {
+        /*! autoprefixer: off */
+        background: #c0c0c0;
+        background: -webkit-linear-gradient(top, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: -moz-linear-gradient(top, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: -ms-linear-gradient(top, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: -o-linear-gradient(top, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: linear-gradient(to bottom, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        top: 0;
+        width: 1px;
+        height: 100%;
+        right: 0;
+        /* 1 */
+    }
+
+    .c-divider--right::after {
+        /*! autoprefixer: off */
+        background: -webkit-radial-gradient(0 50%, farthest-corner, rgba(74, 74, 74, 0.25), transparent 40%);
+        background: -moz-radial-gradient(0 50%, farthest-corner, rgba(74, 74, 74, 0.25), transparent 40%);
+        background: -ms-radial-gradient(0 50%, farthest-corner, rgba(74, 74, 74, 0.25), transparent 40%);
+        background: -o-radial-gradient(0 50%, farthest-corner, rgba(74, 74, 74, 0.25), transparent 40%);
+        background: radial-gradient(farthest-corner at 0 50%, rgba(74, 74, 74, 0.25), transparent 40%);
+        top: 0;
+        height: 100%;
+        width: 20px;
+        right: -20px;
+        /* 1 */
+    }
+
+.c-divider--left {
+    border-width: 0 0 1px 1px;
+    margin-bottom: 0;
+    /**
+     * Divider gradient border.
+     *
+     * 1. Attach the border to the appropriate edge.
+     */
+    /**
+     * Divider shadow.
+     *
+     * 1. Flow the shadow over the appropriate edge.
+     */
+}
+
+    .c-divider--left::before {
+        /*! autoprefixer: off */
+        background: #c0c0c0;
+        background: -webkit-linear-gradient(top, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: -moz-linear-gradient(top, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: -ms-linear-gradient(top, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: -o-linear-gradient(top, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        background: linear-gradient(to bottom, rgba(192, 192, 192, 0), #c0c0c0, rgba(192, 192, 192, 0));
+        top: 0;
+        width: 1px;
+        height: 100%;
+        left: 0;
+        /* 1 */
+    }
+
+    .c-divider--left::after {
+        /*! autoprefixer: off */
+        background: -webkit-radial-gradient(100% 50%, farthest-corner, rgba(74, 74, 74, 0.15), transparent 40%);
+        background: -moz-radial-gradient(100% 50%, farthest-corner, rgba(74, 74, 74, 0.15), transparent 40%);
+        background: -ms-radial-gradient(100% 50%, farthest-corner, rgba(74, 74, 74, 0.15), transparent 40%);
+        background: -o-radial-gradient(100% 50%, farthest-corner, rgba(74, 74, 74, 0.15), transparent 40%);
+        background: radial-gradient(farthest-corner at 100% 50%, rgba(74, 74, 74, 0.15), transparent 40%);
+        top: 0;
+        height: 100%;
+        width: 10px;
+        left: -10px;
+        /* 1 */
+    }
+
+/**
+ * Larger gaps underneath dividers.
+ */
+.c-divider--large {
+    margin-bottom: 39px;
+}
+
+.c-divider--sub::after {
+    content: normal;
+}
+
+
+
+.or-spacer {
+    margin-top: 100px;
+    margin-left: 100px;
+    width: 400px;
+    position: relative;
+}
+
+    .or-spacer .mask {
+        overflow: hidden;
+        height: 20px;
+    }
+
+        .or-spacer .mask:after {
+            content: '';
+            display: block;
+            margin: -25px auto 0;
+            width: 100%;
+            height: 25px;
+            border-radius: 125px / 12px;
+            box-shadow: 0 0 8px black;
+        }
+
+    .or-spacer span {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        bottom: 100%;
+        margin-bottom: -25px;
+        left: 50%;
+        margin-left: -25px;
+        border-radius: 100%;
+        box-shadow: 0 2px 4px #999;
+        background: white;
+    }
+
+        .or-spacer span i {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            left: 4px;
+            right: 4px;
+            border-radius: 100%;
+            border: 1px dashed #aaa;
+            text-align: center;
+            line-height: 40px;
+            font-style: normal;
+            color: #999;
+        }
+
+
+
+/*.or-spacer-vertical .mask {
+    overflow: hidden;
+    width: 20px;*/
+    /*height: 200px;*/
+    /*height: 100%;
+}*/
+
+.spacer-left:after {
+    content: '';
+    display: block;
+    margin-left: -20px;
+    width: 20px;
+    height: 40%;
+    border-radius: 12px / 125px;
+    box-shadow: 0 0 8px black;
+}
+
+.spacer-right {
+    /*content: '';
+    display: block;*/
+    /*margin-left: 20px;*/
+    /*position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 2px;
+    height: 40%;*/
+    /*border-radius: 12px / 125px;*/
+    box-shadow: 5px 0px 5px -5px rgba(0,0,0,0.7);
+    /*border:none;
+    margin: 30% 0px;*/
+}
