@@ -14,6 +14,7 @@ import { Result } from 'src/app/models/result';
 
 import { ConfirmationService } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { PaywithpaypalComponent } from '../paywithpaypal/paywithpaypal.component';
 
 @Component({
   selector: 'app-view-reciepts',
@@ -161,6 +162,25 @@ export class ViewRecieptsComponent implements OnInit {
       }
     });
   }
+
+  openPaypal(url: string) {
+    this.ref = this.dialogService.open(PaywithpaypalComponent, {
+      header: 'Pay with PayPal',
+      data: {
+        url: url,
+      },
+      width: '80%',
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+      maximizable: true,
+    });
+
+    this.ref.onClose.subscribe((data: any) => {
+      if (data) {
+        // this.updatePaidRecord(id);
+      }
+    });
+  }
   //1 print
   //2 pay
   //3 delete
@@ -180,6 +200,33 @@ export class ViewRecieptsComponent implements OnInit {
   }
 
   updateStatus(id: number) {
+    this.recieptService.paywithPaypal(id).subscribe({
+      next: (data) => {
+        let results = new Result(data);
+        this.messageService.add({
+          severity: results.success ? 'success' : 'error',
+          summary: 'FMDC',
+          detail: results.message,
+        });
+        if (results.success) {
+          // window.open(results.message, '_blank');
+          // this.openPaypal(results.message);
+          this.updatePaidRecord(id);
+          // this.load(null);
+        }
+      },
+      error: (data) => {
+        let results = new Result(data);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'FMDC',
+          detail: results.message,
+        });
+      },
+    });
+  }
+
+  updatePaidRecord(id: number) {
     this.recieptService.updateStatus(id).subscribe({
       next: (data) => {
         let results = new Result(data);
@@ -200,6 +247,7 @@ export class ViewRecieptsComponent implements OnInit {
       },
     });
   }
+
   showProcedures() {
     if (this.selectedReciept != null) {
       this.show = true;

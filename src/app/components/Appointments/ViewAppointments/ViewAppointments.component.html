@@ -57,11 +57,10 @@
       <div [ngClass]="{'col-8': isAdmin || isStaff, 'col-12' : isDoctor }">
 
         <p-table #dt [value]="appointments" id="patientsDatatable"
-          styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [tableStyle]="{'min-width': '50rem'}"
-          [paginator]="true" [rows]="10" [showCurrentPageReport]="true" sortMode="single"
-          [globalFilterFields]="['DoctorName','PatientName']"
+          styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [paginator]="true" [rows]="5"
+          [showCurrentPageReport]="true" sortMode="single" [globalFilterFields]="['DoctorName','PatientName']"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-          [rowsPerPageOptions]="[10,25,50]" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="load($event)"
+          [rowsPerPageOptions]="[5,10,25,50]" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="load($event)"
           [loading]="loading" dataKey="id" [resizableColumns]="true">
           <ng-template pTemplate="caption">
             <p-toolbar>
@@ -100,7 +99,7 @@
           </ng-template>
           <ng-template pTemplate="body" let-item>
             <tr>
-              <td>{{item.ID}}</td>
+              <td>{{item.id}}</td>
               <td>
                 {{ item.AppointmentDate | date:'dd-MMM yyyy' }}
               </td>
@@ -122,10 +121,10 @@
                 {{ item.PatientName }}
               </td>
               <td *ngIf="isAdmin">
-
-                <button type="button" class="p-button-secondary" pTooltip="Delete" pButton pRipple icon="pi pi-times"
-                  (click)="Manage(5,item)" pButton pTooltip="Delete"></button>
-
+                <div class="input-group">
+                  <button type="button" class="p-button-secondary" pTooltip="Delete" pButton pRipple icon="pi pi-times"
+                    (click)="Manage(5,item)" pButton pTooltip="Delete"></button>
+                </div>
               </td>
             </tr>
           </ng-template>

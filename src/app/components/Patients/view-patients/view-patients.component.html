@@ -52,15 +52,14 @@
       </ng-template>
       <ng-template pTemplate="body" let-item>
         <tr [pSelectableRow]="item" [pContextMenuRow]="item">
-
           <td>
             {{ item.id }}
           </td>
           <td>
-
-            <p-image [src]="item.hasImage? item.Picture:'../../../../assets/images/profile.png'"
-              [preview]="item.hasImage" class=" table-img" width="30px" height="30px" />
-
+            <p-image *ngIf="!item.hasImage" src="../../../../assets/images/profile.png" [preview]="item.hasImage"
+              class=" table-img" width="30px" height="30px" />
+            <p-image *ngIf="item.hasImage" [src]="item.Picture" [preview]="item.hasImage" class=" table-img"
+              width="30px" height="30px" />
           </td>
           <td>
             {{ item.Name }}

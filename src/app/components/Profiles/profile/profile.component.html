@@ -2,10 +2,9 @@
   <ng-template pTemplate="header">
     <div class="col profile_col">
       <div class="profile_pic">
-        <img *ngIf="currentUser.picture" [src]="currentUser.picture" alt="..." class="img-circle profile_img" />
+        <img *ngIf="currentUser.picture" [src]="currentUser.picture" alt="..." class="profile_img" />
 
-        <img *ngIf="!currentUser.picture" src="../../../assets/images/profile.png" alt="..."
-          class="img-circle profile_img" />
+        <img *ngIf="!currentUser.picture" src="../../../assets/images/profile.png" alt="..." class="profile_img" />
       </div>
       <div class="profile_info">
         <span>Welcome,</span>

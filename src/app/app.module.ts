@@ -140,6 +140,7 @@ import { ProfileButtonComponent } from './components/Profiles/profile-button/pro
 import { ProfileComponent } from './components/Profiles/profile/profile.component';
 import { TodosButtonComponent } from './components/Todos/TodosButton/TodosButton.component';
 import { PatientStatButtonComponent } from './components/Patients/patient-stat-button/patient-stat-button.component';
+import { PaywithpaypalComponent } from './components/Reciepts/paywithpaypal/paywithpaypal.component';
 
 @NgModule({
   declarations: [
@@ -160,7 +161,7 @@ import { PatientStatButtonComponent } from './components/Patients/patient-stat-b
     ViewRecieptsComponent,
     SafeUrlPipe,
     TodoComponent,
-    // ViewPatientComponent,
+    ViewPatientComponent,
     AddPatientComponent,
     NotificationMenuComponent,
     PatientStatsComponent,
@@ -200,6 +201,7 @@ import { PatientStatButtonComponent } from './components/Patients/patient-stat-b
     ProfileButtonComponent,
     TodosButtonComponent,
     PatientStatButtonComponent,
+    PaywithpaypalComponent,
   ],
   providers: [
     httpInterceptorProviders,
@@ -238,6 +240,7 @@ import { PatientStatButtonComponent } from './components/Patients/patient-stat-b
     AddStartComponent,
     SlipComponent,
     ReportComponent,
+    PaywithpaypalComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

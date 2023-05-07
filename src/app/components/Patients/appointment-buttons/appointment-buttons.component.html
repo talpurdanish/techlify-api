@@ -2,8 +2,8 @@
   [disabled]="disabled"></button>
 <p-menu #cmappt [model]="items" styleClass="fmdc-context-menu" [popup]="true" appendTo="body"></p-menu> -->
 <div class="p-inputgroup" *ngIf="isAdmin || isStaff">
-  <button type="button" pButton label="" class="p-button-secondary" [disabled]="!this.patientButton.StartVisible"><i
-      class="pi pi-fw pi-angle-double-right" pTooltip="Start Appoinment" (click)="Manage(1)"></i></button>
+  <button type="button" pButton label="" class="p-button-secondary" [disabled]="!this.patientButton.StartVisible"
+    pTooltip="Start Appoinment" (click)="Manage(1)"><i class="pi pi-fw pi-angle-double-right"></i></button>
   <button type="button" pButton label="" class="p-button-secondary" [disabled]="!this.patientButton.PrescriptionVisible"
     pTooltip="Add Prescription" (click)="Manage(2)"><i class='pi pi-fw pi-mobile'></i></button>
   <button type="button" pButton label="" class="p-button-secondary" [disabled]="!this.patientButton.EndVisible"

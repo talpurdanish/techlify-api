@@ -74,11 +74,11 @@ const routes: Routes = [
         path: 'PatientDetails/:id',
         component: PatientDetailComponent,
       },
-      // {
-      //   path: 'Patients',
-      //   component: ViewPatientComponent,
-      //   canActivate: [AuthGuard],
-      // },
+      {
+        path: 'Patients',
+        component: ViewPatientComponent,
+        canActivate: [AuthGuard],
+      },
 
       {
         path: 'Appointments',

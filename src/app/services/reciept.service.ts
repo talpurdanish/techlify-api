@@ -19,6 +19,13 @@ export class RecieptsService {
     );
   }
 
+  paywithPaypal(id: number): Observable<any> {
+    return this.http.get(
+      CommonFunctions.API_URL + CONTROLLER_NAME + '/PaymentWithPaypal/' + id,
+      { responseType: 'json' }
+    );
+  }
+
   getReciepts(filter: Filter): Observable<any> {
     filter = filter == null ? new Filter('', 1, 1, 1) : filter;
     return this.http.get(CommonFunctions.API_URL + CONTROLLER_NAME, {

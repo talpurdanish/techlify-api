@@ -2689,3 +2689,19 @@ ul.accordion-child-menu li:hover a {
 .p-sidebar {
   padding: 0px !important;
 }
+
+.p-datatable-sm .input-group .p-button-secondary {
+  padding: 3px 0px !important;
+  border-right: 3px groove #a4a4a4 !important;
+  /*#74787b !important;*/
+}
+
+.p-datatable-sm .input-group .p-button-secondary:last-child {
+  border-right: none !important;
+}
+
+.p-datatable .p-sortable-column .p-sortable-column-icon {
+  color: white !important;
+  padding: 2px 0px;
+  margin-top: 2px;
+}
