@@ -1,0 +1,6 @@
+D:\interview\Disney\Disney\obj\Debug\net8.0\Disney.csproj.AssemblyReference.cache
+D:\interview\Disney\Disney\obj\Debug\net8.0\Disney.GeneratedMSBuildEditorConfig.editorconfig
+D:\interview\Disney\Disney\obj\Debug\net8.0\Disney.AssemblyInfoInputs.cache
+D:\interview\Disney\Disney\obj\Debug\net8.0\Disney.AssemblyInfo.cs
+D:\interview\Disney\Disney\obj\Debug\net8.0\Disney.csproj.CoreCompileInputs.cache
+D:\interview\Disney\Disney\obj\Debug\net8.0\Disney.MvcApplicationPartsAssemblyInfo.cache
