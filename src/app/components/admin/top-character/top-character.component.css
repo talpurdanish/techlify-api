@@ -1,0 +1,56 @@
+.filter input[type="checkbox"] {
+  margin: auto 0px;
+  margin-top: 8px;
+}
+
+.character-card-container {
+  display: table;
+}
+
+.top-character-card {
+  padding: 10px;
+  border-radius: 5px;
+  margin: 1px;
+  display: table-cell;
+  width: 19%;
+
+  min-height: 170px;
+}
+
+.top-character-title {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 10pt;
+
+  color: black;
+}
+
+.top-character-img {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  object-fit: cover;
+  object-position: 0% 0%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  clear: both;
+}
+
+.top-character-votes {
+  background: var(--pink);
+  color: white;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14pt;
+  margin: 2px;
+  display: inline-block;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  vertical-align: middle;
+  margin-left: 20px;
+}

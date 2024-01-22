@@ -1,0 +1,97 @@
+<section id="register" class="container-fluid">
+  <div class="section-heading">
+    <h2>Add Character</h2>
+  </div>
+  <form [formGroup]="mainForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="p-fluid grid row">
+      <div class="field col-2 md:col-4 sm:col-12">
+        <label for="name">Name:</label>
+      </div>
+      <div class="field col-10 md:col-8 sm:col-12">
+        <input
+          tabindex="1"
+          id="name"
+          formControlName="name"
+          [class.ng-invalid]="name.errors"
+          class="form-control"
+        />
+        <input
+          class="form-control"
+          tabindex="1"
+          id="characterId"
+          formControlName="characterId"
+          type="hidden"
+        />
+      </div>
+    </div>
+
+    <div class="p-fluid grid row">
+      <div class="field col-2 md:col-4 sm:col-12">
+        <label for="description">Description:</label>
+      </div>
+      <div class="field col-10 md:col-8 sm:col-12">
+        <textarea
+          tabindex="1"
+          id="description"
+          formControlName="description"
+          [class.ng-invalid]="description.errors"
+          class="form-control"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="p-fluid grid row">
+      <div class="field col-2 md:col-2">
+        <label class="control-label">Picture: </label>
+      </div>
+      <div class="field col-7 md:col-7">
+        <input
+          type="file"
+          formControlName="picture"
+          class="form-control"
+          name="picture"
+          (change)="onFileSelected($event)"
+        />
+      </div>
+      <div class="field col-3 md:col-3">
+        <img
+          id="picturesrc"
+          [src]="imageSrc"
+          width="150px"
+          height="154px"
+          style="
+            margin: 0 2px;
+            border: 2px solid var(--green);
+            border-radius: 15px;
+          "
+        />
+      </div>
+    </div>
+    <div class="p-fluid grid row">
+      <div
+        id="errorContainer"
+        class="alert alert-danger text-danger p-fluid grid row col-12"
+        role="alert"
+        *ngIf="!mainForm.valid && isSubmitted"
+      >
+        <p>Form contains following {{ totalErrors }} errors:</p>
+        <ul>
+          <li *ngFor="let errorStr of validationErrors">
+            {{ errorStr.error_message }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="p-fluid grid row text-center m-10">
+      <div class="col-12 md:col-12">
+        <button type="submit" value="Save" class="btn btn-primary">
+          <i class="fa fa-solid fa-save"></i> Save
+        </button>
+        &nbsp;
+        <button type="button" value="Reset" class="btn btn-secondary">
+          <i class="fa fa-solid fa-trash"></i> Reset
+        </button>
+      </div>
+    </div>
+  </form>
+</section>

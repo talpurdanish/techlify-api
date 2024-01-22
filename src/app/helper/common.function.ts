@@ -132,7 +132,7 @@ export class CommonFunctions {
 
     return str;
   }
-  public static API_URL = 'https://localhost:4000/api/fmdc';
+  public static API_URL = 'https://localhost:4000/api';
   public static httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };

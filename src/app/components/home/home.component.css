@@ -1,9 +1,55 @@
-.x_title h2 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-transform: capitalize;
+.character-card {
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px;
 }
 
-.x_title {
+.character-card:hover {
+  background-color: var(--yellow);
+  cursor: pointer;
+}
+
+.character-card:hover img {
+  opacity: 80%;
+}
+
+.character-title {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14pt;
+
+  color: black;
+  margin: 5px;
+  margin-top: 10px;
   padding: 5px;
+}
+
+.character-card .p-image,
+img.character-img {
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  object-fit: cover;
+  object-position: 0% 0%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.character-votes {
+  background: var(--pink);
+  color: white;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14pt;
+  margin: 2px;
+  display: inline-block;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  vertical-align: middle;
+  margin-left: 20px;
 }

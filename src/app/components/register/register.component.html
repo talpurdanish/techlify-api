@@ -1,0 +1,234 @@
+<section id="register" class="container-fluid">
+  <div class="section-heading">
+    <h2>Register</h2>
+  </div>
+  <form [formGroup]="mainForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="p-fluid grid row">
+      <div class="field col-3 md:col-4 sm:col-12">
+        <label for="name">Name:</label>
+      </div>
+      <div class="field col-9 md:col-8 sm:col-12">
+        <input
+          tabindex="1"
+          id="name"
+          formControlName="name"
+          [class.ng-invalid]="name.errors"
+          class="form-control"
+        />
+        <input
+          class="form-control"
+          tabindex="1"
+          id="userId"
+          formControlName="userId"
+          type="hidden"
+        />
+      </div>
+    </div>
+    <div class="p-fluid grid row">
+      <div class="field col-3 md:col-4 sm:col-12">
+        <label for="username">Username:</label>
+      </div>
+      <div class="field col-9 md:col-8 sm:col-12">
+        <input
+          tabindex="1"
+          id="username"
+          formControlName="username"
+          name="username"
+          [class.ng-invalid]="username.errors"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="p-fluid grid row">
+      <div class="field col-3 md:col-4 sm:col-12">
+        <label for="name">Password:</label>
+      </div>
+      <div class="field col-9 md:col-8 sm:col-12">
+        <input
+          type="password"
+          tabindex="1"
+          id="password"
+          formControlName="password"
+          [class.ng-invalid]="password.errors"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="p-fluid grid row">
+      <div class="field col-3 md:col-4 sm:col-12">
+        <label for="name">Confirm Password:</label>
+      </div>
+      <div class="field col-9 md:col-8 sm:col-12">
+        <input
+          type="password"
+          tabindex="1"
+          id="confirmpassword"
+          formControlName="confirmpassword"
+          [class.ng-invalid]="confirmpassword.errors"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="p-fluid grid row">
+      <div class="field col-3 md:col-4 sm:col-12">
+        <label for="name">Date of Birth:</label>
+      </div>
+      <div class="field col-9 md:col-8 sm:col-12">
+        <p-calendar
+          formControlName="dateofBirth"
+          id="dateofBirth"
+          dateFormat="dd/mm/yy"
+          [minDate]="minDateValue"
+          [maxDate]="maxDateValue"
+          [readonlyInput]="true"
+          [class.ng-invalid]="dateofBirth.errors"
+          inputStyleClass="form-control"
+          [showIcon]="true"
+          inputId="icon"
+        ></p-calendar>
+      </div>
+    </div>
+    <div class="p-fluid grid row">
+      <div class="field col-3 md:col-4 sm:col-12">
+        <label for="name">Gender:</label>
+      </div>
+      <div class="field col-9 md:col-8 sm:col-12">
+        <div [class.ng-invalid]="gender?.invalid" class="radio-control">
+          <input
+            type="radio"
+            name="gender"
+            formControlName="gender"
+            id="gender0"
+            value="0"
+          />
+          <label for="gender0"> Male</label>
+          <input
+            type="radio"
+            name="gender"
+            formControlName="gender"
+            id="gender1"
+            value="1"
+          />
+          <label for="gender1"> Female </label>
+          <input
+            type="radio"
+            name="gender"
+            formControlName="gender"
+            id="gender2"
+            value="2"
+          />
+          <label for="gender2"> Other</label>
+        </div>
+      </div>
+    </div>
+    <div class="p-fluid grid row">
+      <div class="field col-3 md:col-4 sm:col-12">
+        <label for="name">Mobile No:</label>
+      </div>
+      <div class="field col-9 md:col-8 sm:col-12">
+        <input
+          tabindex="1"
+          id="phoneNo"
+          formControlName="phoneNo"
+          [class.ng-invalid]="phoneNo.errors"
+          class="form-control"
+        />
+      </div>
+    </div>
+    <div class="p-fluid grid row">
+      <div class="field col-3 md:col-4 sm:col-12">
+        <label for="name">Province:</label>
+      </div>
+      <div class="field col-9 md:col-8 sm:col-12">
+        <p-dropdown
+          [options]="provincesList"
+          optionLabel="Name"
+          optionValue="id"
+          placeholder="Select a Province"
+          (onChange)="onProvinceSelected($event)"
+          styleClass="form-control"
+          id="province"
+          dataKey="value"
+          id="provinceId"
+          name="provinceId"
+          formControlName="provinceId"
+        >
+        </p-dropdown>
+      </div>
+    </div>
+    <div class="p-fluid grid row">
+      <div class="field col-3 md:col-4 sm:col-12">
+        <label for="name">City:</label>
+      </div>
+      <div class="field col-9 md:col-8 sm:col-12">
+        <p-dropdown
+          [options]="citiesList"
+          optionLabel="Name"
+          optionValue="id"
+          placeholder="Select a City"
+          styleClass="form-control"
+          id="city"
+          id="cityId"
+          name="cityId"
+          formControlName="cityId"
+          dataKey="value"
+        >
+        </p-dropdown>
+      </div>
+    </div>
+    <div class="p-fluid grid row">
+      <div class="field col-3 md:col-2">
+        <label class="control-label">Picture </label>
+      </div>
+      <div class="field col-7 md:col-7">
+        <input
+          type="file"
+          formControlName="picture"
+          class="form-control"
+          name="picture"
+          (change)="onFileSelected($event)"
+        />
+      </div>
+      <div class="field col-2 md:col-3">
+        <img
+          id="picturesrc"
+          [src]="imageSrc"
+          width="150px"
+          height="154px"
+          style="
+            margin: 0 2px;
+            border: 2px solid var(--green);
+            border-radius: 15px;
+          "
+        />
+      </div>
+    </div>
+
+    <div class="p-fluid grid row">
+      <div
+        id="errorContainer"
+        class="alert alert-danger text-danger p-fluid grid row col-12"
+        role="alert"
+        *ngIf="!mainForm.valid && isSubmitted"
+      >
+        <p>Form contains following {{ totalErrors }} errors:</p>
+        <ul>
+          <li *ngFor="let errorStr of validationErrors">
+            {{ errorStr.error_message }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="p-fluid grid row text-center m-10">
+      <div class="col-12 md:col-12">
+        <button type="submit" value="Save" class="btn btn-primary">
+          <i class="fa fa-solid fa-save"></i> Save
+        </button>
+        &nbsp;
+        <button type="button" value="Reset" class="btn btn-secondary">
+          <i class="fa fa-solid fa-trash"></i> Reset
+        </button>
+      </div>
+    </div>
+  </form>
+</section>

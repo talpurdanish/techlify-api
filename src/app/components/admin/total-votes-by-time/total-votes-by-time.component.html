@@ -1,0 +1,84 @@
+<p-panel [toggleable]="true">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center gap-2">
+      <span class="font-bold">Total Votes Against Time</span>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="icons">
+    <button
+      class="p-panel-header-icon p-link mr-2"
+      (click)="menu.toggle($event)"
+    ></button>
+  </ng-template>
+  <div class="row filter">
+    <div class="col-9 col-md-9 col-sm-12">
+      <div class="row">
+        <div class="row mt-2">
+          <div class="col-1 col-md-1 col-sm-12">
+            <input type="checkbox" (click)="toggleStartDateFilter()" />
+          </div>
+          <div class="col-4"><span class="p-bold">Start Date:</span></div>
+          <div class="col-7">
+            <p-calendar
+              [disabled]="isStartDateDisabled"
+              [(ngModel)]="rangeDates[0]"
+              selectionMode="single"
+              [readonlyInput]="true"
+              inputStyleClass="dateRange"
+              [maxDate]="rangeDates[1]"
+            ></p-calendar>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-1 col-md-1 col-sm-12">
+            <input type="checkbox" (click)="toggleEndDateFilter()" />
+          </div>
+          <div class="col-4"><span class="p-bold">End Date:</span></div>
+          <div class="col-7">
+            <p-calendar
+              [disabled]="isEndDateDisabled"
+              [(ngModel)]="rangeDates[1]"
+              selectionMode="single"
+              [readonlyInput]="true"
+              inputStyleClass="dateRange"
+              [minDate]="rangeDates[0]"
+            ></p-calendar>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-1 col-md-1 col-sm-12">
+            <input type="checkbox" (click)="toggleCharacterFilter()" />
+          </div>
+          <div class="col-4"><span class="p-bold">Character:</span></div>
+          <div class="col-7">
+            <p-dropdown
+              [disabled]="isCharacterDisabled"
+              [options]="characterList"
+              optionLabel="Name"
+              optionValue="id"
+              (onChange)="onCharacterSelected($event)"
+              dataKey="value"
+            >
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-2 col-md-2 col-sm-12">
+      <button
+        type="button"
+        pButton
+        class="p-button-success"
+        (click)="applyFilter()"
+        [disabled]="
+          isEndDateDisabled && isStartDateDisabled && isCharacterDisabled
+        "
+      >
+        Filter
+      </button>
+    </div>
+  </div>
+  <hr />
+  <p-chart type="line" [data]="data" [options]="options" height="120" />
+</p-panel>

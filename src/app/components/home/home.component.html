@@ -1,99 +1,49 @@
-<div class="fmdc-widget">
-  <div class="row">
-    <div class="col-3">
-      <p-panel header="Total Appointments" [toggleable]="true">
-        <div style="text-align: center; margin-bottom: 17px" class="row">
-          <div class="col">
-            <div id="ttotalappnts" class="count-container border-right">
-              <div class="count">{{apptStats.total}}</div>
-              <h3 class="name_title">Total</h3>
+<section id="home">
+  <p-toast></p-toast>
+  <div class="container-fluid">
+    <!-- Extras -->
+    <div class="container">
+      <!-- Basic elements -->
+      <div class="section-heading">
+        <h2>Vote your favorite character</h2>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="row">
+            <div
+              class="col-3 col-ms-3 col-sm-3"
+              *ngFor="let item of listCharacters"
+            >
+              <div
+                class="character-card shadow-sm"
+                (click)="voteCharacter(item.id)"
+              >
+                <img
+                  [src]="
+                    item.hasImage
+                      ? item.Picture
+                      : '../../../../assets/images/profile.png'
+                  "
+                  class="character-img img-fluid"
+                />
+                <div class="character-title">
+                  <div class="text-center text-black">
+                    {{ item.Name }}
+                    <div class="character-votes">{{ item.Votes }}</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="col">
-            <div id="tpendingappnts" class="count-container">
-              <div class="count red-text">{{apptStats.pending}}</div>
-              <h3 class="name_title">Pending</h3>
-            </div>
-          </div>
+          <!-- /row-->
         </div>
+        <!-- /col-->
+      </div>
+      <!--/row-->
 
-      </p-panel>
+      <!-- /row -->
     </div>
-    <div class="col-md-3">
-      <p-panel header="Todays Appointments" [toggleable]="true">
-        <div style="text-align: center" class="row">
-          <div class="col">
-            <div id="totalappnts" class="count-container border-right">
-              <div class="count">{{apptStats.todaystotal}}</div>
-              <h3 class="name_title">Total</h3>
-            </div>
-          </div>
-          <div class="col">
-            <div id="pendingappnts" class="count-container">
-              <div class="count red-text">{{apptStats.todayspending}}</div>
-              <h3 class="name_title">Pending</h3>
-            </div>
-          </div>
-        </div>
-      </p-panel>
-    </div>
-    <div class="col-md-6">
-      <p-panel header="Income" [toggleable]="true">
-        <div class="row">
-          <div class="col-7">
-            <p-chart type="line" [data]="data" [options]="options" height="120`"></p-chart>
-          </div>
-          <div class="col-5 income-detail">
-            <div class="row">
-              <div class="col-5">
-                <span>Total:</span>
-              </div>
-              <div class="col-7">Rs. <span class="count red-text">{{incomeStats.Total}}</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-5"><span>Todays:</span>
-              </div>
-              <div class="col-7">
-                Rs. <span class="count red-text">{{incomeStats.Todays}}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </p-panel>
-    </div>
+    <!--/container -->
   </div>
-  <div class="row">
-    <div class="col-6">
-      <p-accordion [multiple]="true">
-        <p-accordionTab [tabStyleClass]="hasPendingReports" [selected]="true" [disabled]="disabledReports">
-          <ng-template pTemplate="header">Pending Reports <span class="rowsCount">{{pendingReports}}</span>
-          </ng-template>
-          <ng-template pTemplate="content">
-            <app-pending-reports (UpdatePendingCount)="updatePendingReportsCount($event)"></app-pending-reports>
-            <button pButton icon="" label="Go To Reports" class="p-button-link" (click)="backToList()"
-              style="margin:5px auto;" *ngIf="!disabledReports"></button>
-          </ng-template>
-        </p-accordionTab>
-      </p-accordion>
-    </div>
-    <div class=" col-md-6">
-      <p-accordion [multiple]="true">
-        <p-accordionTab [tabStyleClass]="hasPendingAppointments" [selected]="true" [disabled]="disabledAppointments">
-          <ng-template pTemplate="header">Pending Appointments <span
-              class="rowsCount">{{pendingAppointments}}</span></ng-template>
-          <ng-template pTemplate="content">
-            <app-pending-appointments (UpdatePendingCount)="updatePendingCount($event)"></app-pending-appointments>
-          </ng-template>
-        </p-accordionTab>
-        <p-accordionTab [tabStyleClass]="hasPendingReciepts" [selected]="true" [disabled]="disabledReciepts">
-          <ng-template pTemplate="header">Unpaid Reciepts Appointments <span
-              class="rowsCount">{{unpaidReciepts}}</span></ng-template>
-          <ng-template pTemplate="content">
-            <app-unpaidreciepts (UpdatePendingCount)="updateUnpaidCount($event)"></app-unpaidreciepts>
-          </ng-template>
-        </p-accordionTab>
-      </p-accordion>
-    </div>
-  </div>
-</div>
+  <!-- /container-fluid -->
+</section>

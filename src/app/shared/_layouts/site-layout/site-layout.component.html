@@ -1,67 +1,91 @@
-<div class="container body">
-  <div class="main_container flexbox" style="padding-bottom: 50px;">
-    <div class="col-md-3 left_col">
-      <div class="scroll-view">
-        <div class="menu-logo-image">
-          <img src="../../../../assets/images/logo-inverted.png" alt="..." />
-        </div>
+<div id="page-width">
+  <!-- navigation -->
+  <nav class="navbar navbar-expand-xl fixed-top navbar-custom">
+    <div class="container">
+      <div class="navbar-brand">
+        <img src="assets/images/logo_light.png" alt="" class="nav-image" /> - My
+        Favorite Character
+      </div>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarLo"
+        aria-controls="navbarLo"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarLo">
+        <ul class="navbar-nav ms-auto page-scroll">
+          <li class="nav-item">
+            <a class="nav-link" href="/home">Home</a>
+          </li>
 
-        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-          <app-menu></app-menu>
-        </div>
-      </div>
-    </div>
-    <div class="right_col" role="main">
-      <!-- top navigation -->
-      <div class="top_nav">
-        <div class="nav_menu">
-          <div class="nav toggle">
-            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
-          </div>
-          <p-toolbar>
-            <div class="p-toolbar-group-start">
-            </div>
-            <div class="p-toolbar-group-end">
-              <app-patient-stat-button></app-patient-stat-button>
-              <app-TodosButton></app-TodosButton>
-              <app-profile-button></app-profile-button>
-              <!-- <button pButton type="button" class="p-button-link p-button-danger" (click)="openSidebar($event)">
-                <i class="pi pi-fw pi-angle-left"></i> </button> -->
-            </div>
-          </p-toolbar>
-        </div>
-      </div>
-      <!-- /top navigation -->
-      <div class="main_content">
-        <router-outlet></router-outlet>
-      </div>
-    </div>
-  </div>
-  <footer>
-    <div class="row">
-      <div class="pull-left col">
-        <ul class="footer-nav">
-          <li>
-            <a href="/Home/About">About Us</a>
+          <li class="nav-item" *ngIf="!isLoggedin">
+            <a class="nav-link" href="/login">Login</a>
           </li>
-          <li>
-            <a href="/Home/Contact">Contact Us</a>
+          <li class="nav-item" *ngIf="!isLoggedin">
+            <a class="nav-link" href="/register">Register</a>
           </li>
-          <li>
-            <a href="/Home/Privacy">Privacy</a>
+
+          <li class="nav-item" *ngIf="isLoggedin && isAdmin">
+            <a class="nav-link" href="/Users">Users</a>
+          </li>
+
+          <li class="nav-item dropdown" *ngIf="isLoggedin && isAdmin">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Characters
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/Characters">View</a></li>
+              <li>
+                <a class="dropdown-item" href="/AddCharacter">Add</a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item dropdown" *ngIf="isLoggedin">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {{ currentUser.firstName }}
+            </a>
+            <ul class="dropdown-menu">
+              <li *ngIf="isAdmin">
+                <a class="dropdown-item" href="/admin">Dashboard</a>
+              </li>
+              <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            </ul>
           </li>
         </ul>
       </div>
-      <div class="pull-right col">Federal Medical & Diagnostic Center</div>
-      <div class="clearfix"></div>
     </div>
-  </footer>
-
+  </nav>
+  <!-- /navigation ends -->
+  <!-- Home Page -->
+  <div id="main" class="home">
+    <div id="page-section">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 </div>
 
-<app-profile [sidebarVisible]="sidebarVisible" (SideBarClosed)="sideBarClosed($event)"></app-profile>
-
-
+<app-profile
+  [sidebarVisible]="sidebarVisible"
+  (SideBarClosed)="sideBarClosed($event)"
+></app-profile>
 
 <!-- <div class="modal fade" tabindex="-1" role="dialog" id="form-modal">
     <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">

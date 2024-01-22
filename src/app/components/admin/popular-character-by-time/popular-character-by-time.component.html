@@ -1,0 +1,112 @@
+<p-panel [toggleable]="true">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center gap-2">
+      <span class="font-bold">Popular Character</span>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="icons">
+    <button
+      class="p-panel-header-icon p-link mr-2"
+      (click)="menu.toggle($event)"
+    ></button>
+  </ng-template>
+  <div class="row filter">
+    <div class="col-9 col-md-9 col-sm-12">
+      <div class="row mt-2">
+        <div class="col-1 col-md-1 col-sm-12">
+          <input type="checkbox" (click)="toggleStartDateFilter()" />
+        </div>
+        <div class="col-4"><span class="p-bold">Character:</span></div>
+        <div class="col-7">
+          <p-dropdown
+            [disabled]="isDateDisabled"
+            [options]="dateList"
+            optionLabel="Name"
+            optionValue="id"
+            (onChange)="onDateSelected($event)"
+            dataKey="value"
+          >
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+    <div class="col-3 col-md-3 col-sm-12">
+      <button
+        type="button"
+        pButton
+        class="p-button-success"
+        (click)="applyFilter()"
+        [disabled]="isDateDisabled"
+      >
+        Filter
+      </button>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col-4">
+      <h4>Morning Character</h4>
+
+      <div class="character-card-container">
+        <div class="top-character-card shadow-sm">
+          <img
+            [src]="
+              popularCharacter.morningCharacter.hasImage
+                ? popularCharacter.morningCharacter.Picture
+                : '../../../../assets/images/profile.png'
+            "
+            class="top-character-img img-fluid"
+          />
+          <div class="top-character-title">
+            <div class="text-center text-black">
+              {{ popularCharacter.morningCharacter.Name }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <h4>Morning Character</h4>
+
+      <div class="character-card-container">
+        <div class="top-character-card shadow-sm">
+          <img
+            [src]="
+              popularCharacter.afternoonCharacter.hasImage
+                ? popularCharacter.afternoonCharacter.Picture
+                : '../../../../assets/images/profile.png'
+            "
+            class="top-character-img img-fluid"
+          />
+          <div class="top-character-title">
+            <div class="text-center text-black">
+              {{ popularCharacter.afternoonCharacter.Name }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <h4>Morning Character</h4>
+
+      <div class="character-card-container">
+        <div class="top-character-card shadow-sm">
+          <img
+            [src]="
+              popularCharacter.eveningCharacter.hasImage
+                ? popularCharacter.eveningCharacter.Picture
+                : '../../../../assets/images/profile.png'
+            "
+            class="top-character-img img-fluid"
+          />
+          <div class="top-character-title">
+            <div class="text-center text-black">
+              {{ popularCharacter.eveningCharacter.Name }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</p-panel>

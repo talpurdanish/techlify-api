@@ -15,11 +15,9 @@ export class AppComponent {
 
   constructor(
     private storageService: StorageService,
-    private menuService: MenuService,
     private primengConfig: PrimeNGConfig
   ) {}
   ngOnInit(): void {
-    this.menuService.addMenuItems();
     this.primengConfig.ripple = true;
     try {
       this.isLoggedIn = this.storageService.isLoggedIn();

@@ -1,0 +1,54 @@
+.radio-control input[type="radio"] {
+  display: none;
+}
+
+.radio-control label {
+  float: left;
+  padding: 10px;
+  border: 1px solid #000;
+  color: #000;
+  border-left: none;
+  font-weight: bold;
+  /* margin: 10px;
+  border-radius: 5px; */
+  min-width: 100px;
+  text-align: center;
+  transition: all 0.7s ease-out;
+}
+
+.radio-control label:last-child {
+  background-color: var(--green);
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.radio-control label:last-child:hover,
+.radio-control input:checked + label:last-child {
+  background-color: #007a00;
+  color: #fff;
+}
+.radio-control label:nth-child(2) {
+  background-color: var(--pink);
+  border-left: 1px solid #000;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.radio-control label:nth-child(2):hover,
+.radio-control input:checked + label:nth-child(2) {
+  background-color: #7a0000;
+  color: white;
+}
+
+.radio-control label:nth-child(4) {
+  background-color: var(--orange);
+}
+
+.radio-control label:nth-child(4):hover,
+.radio-control input:checked + label:nth-child(4) {
+  background-color: #ac6500;
+  color: #fff;
+}
+
+#register label {
+  font-weight: bold;
+}

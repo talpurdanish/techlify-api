@@ -2,6 +2,7 @@ import { StorageService } from './../../services/storage.service';
 import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-logout',
@@ -12,6 +13,7 @@ export class LogoutComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private storageService: StorageService,
+
     private router: Router
   ) {}
 

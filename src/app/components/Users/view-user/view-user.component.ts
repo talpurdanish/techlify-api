@@ -1,4 +1,3 @@
-import { RecieptReportComponent } from './../../Reciepts/reciept-report/reciept-report.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonFunctions } from './../../../helper/common.function';
 import { Filter } from './../../../helper/filter';
@@ -155,7 +154,7 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
         let results = new Result(data);
         this.messageService.add({
           severity: 'error',
-          summary: 'FMDC',
+          summary: 'Disney',
           detail: results.message,
         });
         this.USERS = [];
@@ -242,7 +241,7 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
             let results = new Result(data);
             this.messageService.add({
               severity: results.success ? 'success' : 'error',
-              summary: 'FMDC',
+              summary: 'Disney',
               detail: results.message,
             });
             this.loadUsers(null);
@@ -251,7 +250,7 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
             let results = new Result(data);
             this.messageService.add({
               severity: 'error',
-              summary: 'FMDC',
+              summary: 'Disney',
               detail: results.message,
             });
           },
@@ -280,7 +279,7 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
             let results = new Result(data);
             this.messageService.add({
               severity: results.success ? 'success' : 'error',
-              summary: 'FMDC',
+              summary: 'Disney',
               detail: results.message,
             });
             this.loadUsers(null);
@@ -289,7 +288,7 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
             let results = new Result(data);
             this.messageService.add({
               severity: 'error',
-              summary: 'FMDC',
+              summary: 'Disney',
               detail: results.message,
             });
           },

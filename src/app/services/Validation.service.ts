@@ -9,7 +9,6 @@ import {
 import { map } from 'rxjs';
 import { Result } from '../models/result';
 import { UserService } from './user.service';
-import { PatientService } from './patient.service';
 
 export class ValidationService {
   static getValidatorErrorMessage(validatorName: string, validatorValue?: any) {
@@ -81,55 +80,6 @@ export class ValidationService {
     var notExists = result.message == undefined || result.message == false;
 
     return notExists;
-  }
-
-  static cnicValidator(user: UserService): AsyncValidatorFn {
-    return (control: AbstractControl) => {
-      var id = control?.parent.get('userId').value;
-
-      return user
-        .checkUniqueValue(
-          'checkcnic',
-          CommonFunctions.changeCNICValue(control?.value),
-          id
-        )
-        .pipe(
-          map((user) =>
-            !this.getValidatorResults(user) ? { cnicExists: true } : null
-          )
-        );
-    };
-  }
-  static pmdcNoValidator(user: UserService): AsyncValidatorFn {
-    return (control: AbstractControl) => {
-      var id = control?.parent.get('userId').value;
-
-      return user
-        .checkUniqueValue('checkpmdcno', control.value, id)
-        .pipe(
-          map((user) =>
-            !this.getValidatorResults(user) ? { pmdcnoExists: true } : null
-          )
-        );
-    };
-  }
-
-  static patientcnicValidator(service: PatientService): AsyncValidatorFn {
-    return (control: AbstractControl) => {
-      var id = control?.parent.get('Id').value;
-
-      return service
-        .checkUniqueValue(
-          'checkcnic',
-          CommonFunctions.changeCNICValue(control?.value),
-          id
-        )
-        .pipe(
-          map((user) =>
-            !this.getValidatorResults(user) ? { cnicExists: true } : null
-          )
-        );
-    };
   }
 
   static greaterThan(matchTo: string, check: string = ''): ValidatorFn {

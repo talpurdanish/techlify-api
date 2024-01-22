@@ -1,110 +1,56 @@
-<!-- <div class="col-md-12">
-  <div class="card card-container">
+<section id="login" class="container-fluid">
+  <div class="section-heading">
+    <h2>Login</h2>
+  </div>
+  <div *ngIf="isLoading" class="loaderbody" id="loaderbody">
+    <div class="loader">
+      <img src="../../../assets/images/scanning.gif" />
+    </div>
+  </div>
+  <div class="shadow-lg bubble">
     <form
-      *ngIf="!isLoggedIn"
+      [formGroup]="loginForm"
       name="form"
-      (ngSubmit)="f.form.valid && onSubmit()"
-      #f="ngForm"
+      (ngSubmit)="onSubmit()"
       novalidate
     >
-      <img
-        id="profile-img"
-        src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-        class="profile-img-card"
-        width="20pt"
-        height="auto"
+      <input
+        type="text"
+        class="form-control"
+        name="username"
+        id="username"
+        formControlName="username"
+        name="username"
+        required
+        placeholder="Enter your Username"
+        [class.ng-invalid]="isLoading && username.errors"
       />
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          class="form-control"
-          name="username"
-          [(ngModel)]="form.username"
-          required
-          #username="ngModel"
-          [ngClass]="{ 'is-invalid': f.submitted && username.errors }"
-        />
-        <div *ngIf="username.errors && f.submitted" class="invalid-feedback">
-          Username is required!
-        </div>
+
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+        formControlName="password"
+        required
+        name="password"
+        placeholder="Password"
+        [class.ng-invalid]="isLoading && password.errors"
+      />
+
+      <div
+        class="text-center text-danger"
+        *ngIf="isLoginFailed || username.errors || password.errors"
+      >
+        {{ errorMessage }}
       </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          class="form-control"
-          name="password"
-          [(ngModel)]="form.password"
-          required
-          #password="ngModel"
-          [ngClass]="{ 'is-invalid': f.submitted && password.errors }"
-        />
-        <div *ngIf="password.errors && f.submitted" class="invalid-feedback">
-          <div *ngIf="password.errors['required']">Password is required</div>
-          <div *ngIf="password.errors['minlength']">
-           minlength="6"
-            Password must be at least 6 characters
-          </div>
-        </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary" id="btnLogin">
+          <i class="fa fa-login"></i> Login
+        </button>
       </div>
-      <div class="form-group">
-        <button class="btn btn-primary btn-block">Login</button>
-      </div>
-      <div class="form-group">
-        <div
-          *ngIf="f.submitted && isLoginFailed"
-          class="alert alert-danger"
-          role="alert"
-        >
-          Login failed: {{ errorMessage }}
-        </div>
-      </div>
+      <div class="clearfix"></div>
     </form>
-    <div class="alert alert-success" *ngIf="isLoggedIn">
-      Welcome {{ username }}.
-    </div>
   </div>
-</div> -->
-
-<form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-  <h1>Login Form</h1>
-  <div class="form-group">
-    <div class="input-group mb-3">
-      <span class="input-group-text" [class.ng-invalid]="f.submitted && password.errors"><i
-          class="fa fa-user"></i></span>
-      <input type="text" class="form-control" name="username" id="username" [(ngModel)]="form.username" required
-        #username="ngModel" placeholder="Username" [class.ng-invalid]="f.submitted && username.errors" />
-    </div>
-  </div>
-
-  <div class="form-group">
-    <div class="input-group mb-3">
-      <span class="input-group-text" [class.ng-invalid]="f.submitted && password.errors"><i
-          class="fa fa-asterisk"></i></span>
-      <input type="password" class="form-control" id="password" name="password" [(ngModel)]="form.password" required
-        #password="ngModel" placeholder="Password" [class.ng-invalid]="f.submitted && password.errors" />
-    </div>
-  </div>
-  <div class="login_error" *ngIf="f.submitted && (username.errors || password.errors || isLoginFailed)">
-    <span *ngIf="f.submitted && (username.errors || password.errors)">
-      Username/Password is required!
-    </span>
-    <span *ngIf="
-        f.submitted && isLoginFailed && !(username.errors || password.errors)
-      ">
-      {{ errorMessage }}
-    </span>
-  </div>
-
-  <div class="buttons">
-    <button type="submit" class="to-bottom" id="btnLogin">
-      <i class="fa fa-stethoscope" id="loading"></i>
-      Login
-    </button>
-  </div>
-  <div class="clearfix"></div>
-</form>
-<div *ngIf="isLoading" class="loaderbody" id="loaderbody">
-  <div class="loader"><img src="../../../assets/images/scanning.gif" /></div>
-</div>
+</section>

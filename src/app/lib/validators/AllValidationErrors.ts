@@ -1,6 +1,6 @@
 import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
 
-export interface FmdcValidationError {
+export interface DisneyValidationError {
   control_name: string;
   error_name: string;
   error_value: any;
@@ -14,8 +14,8 @@ export interface FormGroupControls {
 export class AllValidationErrors {
   static getFormValidationErrors(
     controls: FormGroupControls
-  ): FmdcValidationError[] {
-    let errors: FmdcValidationError[] = [];
+  ): DisneyValidationError[] {
+    let errors: DisneyValidationError[] = [];
     Object.keys(controls).forEach((key) => {
       const control = controls[key];
       if (control instanceof FormGroup) {

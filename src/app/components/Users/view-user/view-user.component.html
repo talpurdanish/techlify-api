@@ -1,21 +1,28 @@
-<div class="x_panel">
-  <div class="x_title">
-    <h2>Users List</h2>
-
-    <div class="clearfix"></div>
+<section id="users" class="container-fluid">
+  <div class="jumbo-heading">
+    <!-- Heading -->
+    <h1>User Records</h1>
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+      <li><a href="/Home">Home</a> <span class="divider"></span></li>
+      <li class="active">Users Records</li>
+    </ul>
   </div>
-  <div class="x_content_inner">
+  <div class="container container-fluid">
     <p-toast></p-toast>
     <p-confirmPopup></p-confirmPopup>
 
     <p-table #dt [value]="USERS" id="userDatatable"
-      styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [tableStyle]="{'min-width': '50rem'}"
-      [paginator]="true" [rows]="5" [showCurrentPageReport]="true" sortMode="single"
-      [globalFilterFields]="['Name','PMDCNo','CNIC','RoleName','Username','CityName','PhoneNo']"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      [rowsPerPageOptions]="[5,10,25,50]" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadUsers($event)"
-      [loading]="loading" dataKey="id" selectionMode="single" [(selection)]="selectedUser" [resizableColumns]="true"
-      [(contextMenuSelection)]="selectedUser" [contextMenu]="cm">
+      styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [tableStyle]="{ 'min-width': '50rem' }"
+      [paginator]="true" [rows]="5" [showCurrentPageReport]="true" sortMode="single" [globalFilterFields]="[
+        'Name',
+        'RoleName',
+        'Username',
+        'CityName',
+        'PhoneNo'
+      ]" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="totalRecords"
+      [lazy]="true" (onLazyLoad)="loadUsers($event)" [loading]="loading" dataKey="id" selectionMode="single"
+      [(selection)]="selectedUser" [resizableColumns]="true" [(contextMenuSelection)]="selectedUser" [contextMenu]="cm">
       <ng-template pTemplate="caption">
         <p-toolbar>
           <div class="p-toolbar-group-start">
@@ -23,7 +30,6 @@
           </div>
           <div class="p-toolbar-group-end">
             <div class="p-inputgroup">
-
               <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
               <input pInputText type="text" placeholder="Search keyword" #searchTerm />
               <span class="p-inputgroup-addon">
@@ -35,16 +41,25 @@
       </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th [style]="{'width':'20px'}"><i class="fa-solid fa-check"></i></th>
+          <th [style]="{ width: '20px' }">
+            <i class="fa fa-solid fa-check"></i>
+          </th>
           <th>Id</th>
-          <th [style]="{'width':'20px'}"><i class="fa-sharp fa-solid fa-images"></i></th>
-          <th pSortableColumn="1">Name<p-sortIcon field="Name"></p-sortIcon></th>
-          <th pSortableColumn="2" [style]="{'width':'120px'}">PMDCNo<p-sortIcon field="PMDCNo"></p-sortIcon></th>
-          <th pSortableColumn="3">CNIC<p-sortIcon field="CNIC"></p-sortIcon></th>
-          <th pSortableColumn="4">Role<p-sortIcon field="RoleName"></p-sortIcon></th>
-          <th pSortableColumn="5">Username<p-sortIcon field="Username"></p-sortIcon></th>
-          <th pSortableColumn="6" [style]="{'width':'60px'}"><i class="fa-solid fa-venus-mars"></i><p-sortIcon
-              field="Gender"></p-sortIcon></th>
+          <th [style]="{ width: '20px' }">
+            <i class="fa fa-sharp fa-solid fa-images"></i>
+          </th>
+          <th pSortableColumn="1">
+            Name<p-sortIcon field="Name"></p-sortIcon>
+          </th>
+          <th pSortableColumn="4">
+            Role<p-sortIcon field="RoleName"></p-sortIcon>
+          </th>
+          <th pSortableColumn="5">
+            Username<p-sortIcon field="Username"></p-sortIcon>
+          </th>
+          <th pSortableColumn="6" [style]="{ width: '60px' }">
+            <i class="fa fa-solid fa-venus-mars"></i><p-sortIcon field="Gender"></p-sortIcon>
+          </th>
           <th>PhoneNo</th>
           <th>DoB</th>
           <th>City</th>
@@ -55,30 +70,25 @@
         <tr [class.deleted]="!item.IsActive" [pSelectableRow]="item" [pContextMenuRow]="item">
           <td>
             <i [ngClass]="
-                    item.IsActive
-                      ? 'fa-solid fa-user-check'
-                      : 'fa-solid fa-user-slash'
-                  "></i>
+                item.IsActive
+                  ? 'fa fa-solid fa-user-check'
+                  : 'fa fa-solid fa-user-slash'
+              "></i>
           </td>
           <td>
             {{ item.id }}
           </td>
           <td>
-
-            <p-image [src]="item.hasImage? item.Picturesrc:'../../../../assets/images/profile.png'"
-              [preview]="item.hasImage" class=" table-img" width="30px" height="30px" />
-
+            <p-image [src]="
+                item.hasImage
+                  ? item.Picturesrc
+                  : '../../../../assets/images/profile.png'
+              " [preview]="item.hasImage" class="table-img" width="30px" height="30px" />
           </td>
           <td>
             {{ item.Name }}
           </td>
 
-          <td>
-            {{ item.PMDCNo }}
-          </td>
-          <td>
-            {{ item.CNIC }}
-          </td>
           <td>
             {{ item.Role }}
           </td>
@@ -86,14 +96,14 @@
             {{ item.Username }}
           </td>
           <td>
-            <i *ngIf="item.Gender == '0'" class="fa-solid fa-mars"></i>
-            <i *ngIf="item.Gender == '1'" class="fa-solid fa-venus"></i>
-            <i *ngIf="item.Gender == '2'" class="fa-solid fa-transgender"></i>
+            <i *ngIf="item.Gender == '0'" class="fa fa-solid fa-mars"></i>
+            <i *ngIf="item.Gender == '1'" class="fa fa-solid fa-venus"></i>
+            <i *ngIf="item.Gender == '2'" class="fa fa-solid fa-transgender"></i>
           </td>
           <td>
             {{ item.PhoneNo }}
           </td>
-          <td>{{ item.DateofBirth | date:'dd/MM/yy'}}</td>
+          <td>{{ item.DateofBirth | date : "dd/MM/yy" }}</td>
           <!-- <td class="action-column">
             <span class="p-buttonset">
               <button type="button" class="p-button-success p-button-outlined p-button-raised" pButton pRipple
@@ -108,7 +118,7 @@
                 icon="pi pi-times" (click)="ManageUser(5,item)"></button>
             </span>
           </td> -->
-          <td>{{item.City}}</td>
+          <td>{{ item.City }}</td>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
@@ -125,8 +135,6 @@
         </ng-template>
       </ng-template>
     </p-table>
-
   </div>
-
-</div>
-<p-contextMenu #cm [model]="items" styleClass="fmdc-context-menu"></p-contextMenu>
+</section>
+<p-contextMenu #cm [model]="items" styleClass="Disney-context-menu"></p-contextMenu>

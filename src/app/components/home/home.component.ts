@@ -1,16 +1,13 @@
-import { Incomestats } from './../../models/incomestats';
-import { RecieptsService } from 'src/app/services/reciept.service';
-import { AppointmentStats } from './../../models/appointmentStats';
-import { AppointmentService } from './../../services/appointment.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { StorageService } from 'src/app/services/storage.service';
 import { Router } from '@angular/router';
-import { User } from 'src/app/models/users';
+import { Character } from 'src/app/models/character';
 import { Login } from 'src/app/models/login';
-import { Subscription, timer } from 'rxjs';
 
-import { switchMap } from 'rxjs/operators';
+import { CharacterService } from 'src/app/services/character.service';
 import { Result } from 'src/app/models/result';
+import { MessageService } from 'primeng/api';
+import { Roles } from 'src/app/models/Roles';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -18,116 +15,82 @@ import { Result } from 'src/app/models/result';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   content?: string;
-  listUsers: User[] = [];
+  listCharacters: Character[] = [];
   currentUser: Login = new Login();
   data: any;
   options: any;
-  apptStats: AppointmentStats = new AppointmentStats();
-  incomeStats: Incomestats = new Incomestats();
-  total: number;
-  pending: number;
-  todaysPensing: number;
-  todaysTotal: number;
-  apptSubscription!: Subscription;
-  incomeSubscription!: Subscription;
-  pendingAppointments: Number = 0;
-  unpaidReciepts: Number = 0;
-  pendingReports: number = 0;
-  hasPendingAppointments: string = '';
-  hasPendingReciepts: string = '';
-  hasPendingReports: string = '';
-  disabledAppointments: boolean = true;
-  disabledReciepts: boolean = true;
-  disabledReports: boolean = true;
+  i: number = 0;
   constructor(
     private storageService: StorageService,
-    private router: Router,
-    private apptService: AppointmentService,
-    private recieptService: RecieptsService
+    private characterService: CharacterService,
+    private messageService: MessageService,
+    private router: Router
   ) {
     if (this.storageService.isLoggedIn()) {
       this.currentUser = this.storageService.getUser();
-
-      this.options = {
-        plugins: {
-          title: {
-            display: false,
-          },
-          legend: {
-            position: 'none',
-          },
-        },
-      };
-    } else {
-      this.router.navigate(['/login']);
     }
   }
   ngOnInit(): void {
-    this.updateAppointmentStats();
-    this.updateIncomeStats();
+    this.loadCharacters();
   }
-  ngOnDestroy() {
-    this.apptSubscription.unsubscribe();
-  }
+  ngOnDestroy() {}
 
-  updateAppointmentStats() {
-    this.apptSubscription = timer(0, 60000)
-      .pipe(switchMap(() => this.apptService.getAppointmentStats()))
-      .subscribe((value) => {
-        let results = new Result(value);
-        var data = results.results;
-        let jsonObj = JSON.stringify(data);
-
-        let output = JSON.parse(jsonObj);
-
-        this.apptStats = new AppointmentStats(output);
-      });
-  }
-
-  updateIncomeStats() {
-    this.apptSubscription = timer(0, 60000)
-      .pipe(switchMap(() => this.recieptService.getIncomeStats()))
-      .subscribe((value) => {
-        let results = new Result(value);
-        var data = results.results;
-        if (results.message.indexOf('No Stats') == -1) {
-          let jsonObj = JSON.stringify(data);
-
-          let output = JSON.parse(jsonObj);
-
-          this.incomeStats = new Incomestats(output);
-
-          this.data = {
-            labels: this.incomeStats.Labels,
-            datasets: [
-              {
-                label: 'Income Stats',
-                data: this.incomeStats.Data,
-              },
-            ],
-          };
+  loadCharacters(): void {
+    this.characterService.getCharacters(null).subscribe({
+      next: (data) => {
+        let results = new Result(data);
+        this.listCharacters = [];
+        var characters = results.results;
+        for (const prop in characters) {
+          var pObj = JSON.stringify(characters[prop]);
+          var cObj = JSON.parse(pObj);
+          var character = new Character(cObj);
+          this.listCharacters.push(character);
         }
+      },
+      error: (err) => {
+        let results = new Result(err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Disney',
+          detail: results.message,
+        });
+      },
+    });
+  }
+
+  private alertCharacters(): void {
+    var finalr = '';
+    this.listCharacters.forEach((element) => {
+      finalr += element.ToString() + '\n';
+    });
+    alert(finalr);
+  }
+
+  public voteCharacter(id: number): void {
+    if (
+      this.currentUser.id !== '0' &&
+      this.currentUser.role !== Roles.Administrator
+    ) {
+      this.characterService.vote(id).subscribe({
+        next: (data) => {
+          let results = new Result(data);
+          this.messageService.add({
+            severity: data.success ? 'success' : 'error',
+            summary: 'Disney',
+            detail: results.message,
+          });
+          this.loadCharacters();
+        },
+        error: (err) => {
+          let results = new Result(err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Disney',
+            detail: results.message,
+          });
+        },
       });
-  }
-
-  updateUnpaidCount(value: number) {
-    this.unpaidReciepts = value;
-    this.hasPendingReciepts = value > 0 ? 'hasPending' : '';
-    this.disabledReciepts = value === 0;
-  }
-  updatePendingCount(value: number) {
-    this.pendingAppointments = value;
-    this.hasPendingAppointments = value > 0 ? 'hasPending' : '';
-    this.disabledAppointments = value === 0;
-  }
-
-  updatePendingReportsCount(value: number) {
-    this.pendingReports = value;
-    this.hasPendingReports = value > 0 ? 'hasPending' : '';
-    this.disabledReports = value === 0;
-  }
-
-  backToList(): void {
-    this.router.navigate(['/Reports']);
+    }
   }
 }
